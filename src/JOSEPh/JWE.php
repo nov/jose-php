@@ -21,14 +21,12 @@ class JOSEPh_JWE extends JOSEPh_JWT {
     }
 
     function encrypt($public_key_or_secret, $algorithm = 'RSA1_5', $encryption_method = 'A128CBC+HS256') {
-        // NOTE:
-        //  Encrypting something for native apps on server-side won't be a good idea in general.
-        //  If you really do it, understand the concept of "Holder of Key (HoK)" first.
-        //  I don't stop implementing this feature if you just want to use JWE for server-to-server communication.
-        //  I think SSL is enough in that case though.
-        throw new JOSEPh_Exception(
-            'DO NOT ENCRYPT ANYTHING UNLESS UNDERSTANDING WHY ENCRYPTING IT USING WHAT KIND OF KEY FOR WHOM'
-        );
+        $this->generateMasterKey();
+        $this->encryptMasterKey($private_key_or_secret);
+        $this->deriveEncryptionAndIntegrityKeys();
+        $this->encryptCipherText();
+        $this->generateIntegrityValue();
+        return $this;
     }
 
     function decrypt($private_key_or_secret) {
@@ -38,6 +36,16 @@ class JOSEPh_JWE extends JOSEPh_JWT {
         $this->decryptCipherText();
         $this->checkIntegrity();
         return $this;
+    }
+
+    function toString() {
+        return implode('.', array(
+            $this->compact((object) $this->header),
+            $this->compact($this->encrypted_master_key),
+            $this->compact($this->iv),
+            $this->compact($this->cipher_text),
+            $this->compact($this->integrity_value)
+        ));
     }
 
     private function _decode() {
@@ -82,6 +90,35 @@ class JOSEPh_JWE extends JOSEPh_JWT {
                 throw new JOSEPh_Exception_UnexpectedAlgorithm('Unknown algorithm');
         }
         return $cipher;
+    }
+
+    private function generateMasterKey() {
+        # TODO
+    }
+
+    private function encryptMasterKey($public_or_private_key) {
+        switch ($this->header['alg']) {
+            case 'RSA1_5':
+                $rsa = $this->rsa($public_or_private_key, CRYPT_RSA_ENCRYPTION_PKCS1);
+                $this->encrypted_master_key = $rsa->encrypt($this->master_key);
+                break;
+            case 'RSA-OAEP':
+                $rsa = $this->rsa($public_or_private_key, CRYPT_RSA_ENCRYPTION_OAEP);
+                $this->encrypted_master_key = $rsa->decrypt($this->master_key);
+                break;
+            case 'A128KW':
+            case 'A256KW':
+            case 'dir':
+            case 'ECDH-ES':
+            case 'ECDH-ES+A128KW':
+            case 'ECDH-ES+A256KW':
+                throw new JOSEPh_Exception_UnexpectedAlgorithm('Algorithm not supported');
+            default:
+                throw new JOSEPh_Exception_UnexpectedAlgorithm('Unknown algorithm');
+        }
+        if (!$this->master_key) {
+            throw new JOSEPh_Exception_DecryptionFailed('Master key encryption failed');
+        }
     }
 
     private function decryptMasterKey($public_or_private_key) {
@@ -171,8 +208,11 @@ class JOSEPh_JWE extends JOSEPh_JWT {
         }
     }
 
+    private function generateIntegrityValue() {
+        # TODO
+    }
+
     private function checkIntegrity() {
         # TODO
-        throw new JOSEPh_Exception_VerificationFailed('Integrity check failed');
     }
 }
