@@ -6,10 +6,6 @@ require_once dirname(__FILE__) . '/../src/JOSEPh/JWT.php';
 
 class IdToken {
     var $jwt;
-    var $with_signature = false;
-    var $with_encryption = false;
-    var $private_key_or_secret;
-    var $public_key_or_secret;
 
     function __construct($claims = array()) {
         $this->jwt = new JOSEPh_JWT($claims);
