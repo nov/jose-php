@@ -2,6 +2,11 @@
 
 PHP JOSE Implementation
 
+# Requirements
+
+phpseclib is required.
+http://phpseclib.sourceforge.net
+
 # Example
 
 ## JWT
@@ -49,4 +54,4 @@ not supported yet
 
 # Copyright
 
-Copyright © 2011 GREE Inc. See LICENSE for details.
+Copyright © 2013 GREE Inc. See LICENSE for details.
