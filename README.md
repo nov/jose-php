@@ -22,6 +22,7 @@ PHP JOSE Implementation
 
 ### Signing
 
+    $private_key = "-----BEGIN RSA PRIVATE KEY-----\n....";
     $jwt = new JOSEPh_JWT(array(
         'foo' => 'bar'
     ));
@@ -29,6 +30,7 @@ PHP JOSE Implementation
 
 ### Verification
 
+    $public_key = "-----BEGIN RSA PUBLIC KEY-----\n....";
     $jwt_string = 'eyJ...';
     $jwt = JOSEPh_JWT::decode($jwt_string);
     $jwt->verify($public_key);
