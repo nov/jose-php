@@ -40,6 +40,12 @@ class JOSEPh_JWT {
         return $jws;
     }
 
+    function encrypt($public_key_or_secret, $algorithm = 'RSA1_5', $encryption_method = 'A128CBC+HS256') {
+        $jwe = new JOSEPh_JWE($this);
+        $jwe->encrypt($public_key_or_secret, $algorithm, $encryption_method);
+        return $jwe;
+    }
+
     static function encode($claims) {
         return new self($claims);
     }
