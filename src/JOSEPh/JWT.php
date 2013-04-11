@@ -59,7 +59,6 @@ class JOSEPh_JWT {
             default:
                 throw new JOSEPh_Exception_InvalidFormat('JWT should have exact 3 or 5 segments');
         }
-
     }
 
     protected function compact($segment) {
