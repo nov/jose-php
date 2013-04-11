@@ -54,4 +54,4 @@ not supported yet
 
 # Copyright
 
-Copyright © 2013 GREE Inc. See LICENSE for details.
+Copyright &copy; 2013 GREE Inc. See LICENSE for details.
