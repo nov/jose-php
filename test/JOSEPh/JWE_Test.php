@@ -13,10 +13,17 @@ class JOSEPh_JWE_Test extends JOSEPh_TestCase {
         );
     }
 
+    function testEncryptRSA15A128GCM() {
+        $jwe = new JOSEPh_JWE($this->plain_text);
+        $jwe->encrypt($this->rsa_keys['public']);
+        $jwt = JOSEPh_JWT::decode($jwe->toString());
+        $this->assertEquals($this->plain_text, $jwt->decrypt($this->rsa_keys['private'])->plain_text);
+    }
+
     function testDecryptRSA15A128GCM() {
         $input = 'eyJhbGciOiJSU0ExXzUiLCJlbmMiOiJBMTI4Q0JDK0hTMjU2In0.gOIfTaAkLJYGsK-anmDgxokNit2UqKiraKyExUxM0oj5mw2UngEUGvLK-iztMTiONovqwsMmxOsoZLt_t7paCAx1_3KB1YuCZtBF-0_eH54j0KRdF1Ht8xDaPg0nNmkfSqn19EM-fZVDNBK4Jig-8eF0nbtq1EjL9m6AXV1utIQgM5-3gDtnXkNJ8pYkS22Lga4906smr5IkswdlJEvu81GFV7haFb1Edpyw_Ty0El8KW-p0Udz5FFZD_16qO4FzvSJk73X2l21zXENqUXhiFJDXacBOozpyGL0Rf-idwk9-X3mh8RThutcTelVUOWYdcW-7B8oLaeLEPFYeaLLsjQ.AaxiImKsfoBGoM5s9bp90Q.5KBllDM4n5Po3BhQ8CkpTQ.MNpTRLD3plIxs6JqR6h2ww0D97T5R9oNtE7uplkUcdE';
         $jwe = new JOSEPh_JWE($input);
         $jwe->decrypt($this->rsa_keys['private']);
-        $this->fail('should fail');
+        $this->assertEquals($this->plain_text, $jwe->plain_text);
     }
 }

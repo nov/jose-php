@@ -18,11 +18,16 @@ class JOSEPh_JWE extends JOSEPh_JWT {
         } else {
             $this->raw = $input;
         }
+        unset($this->header['typ']);
     }
 
     function encrypt($public_key_or_secret, $algorithm = 'RSA1_5', $encryption_method = 'A128CBC+HS256') {
-        $this->generateMasterKey();
-        $this->encryptMasterKey($private_key_or_secret);
+        $this->header['alg'] = $algorithm;
+        $this->header['enc'] = $encryption_method;
+        $this->plain_text = $this->raw;
+        $this->generateMasterKey($public_key_or_secret);
+        $this->encryptMasterKey($public_key_or_secret);
+        $this->generateIv();
         $this->deriveEncryptionAndIntegrityKeys();
         $this->encryptCipherText();
         $this->generateIntegrityValue();
@@ -92,8 +97,46 @@ class JOSEPh_JWE extends JOSEPh_JWT {
         return $cipher;
     }
 
-    private function generateMasterKey() {
-        # TODO
+    private function generateRandomBytes($length) {
+        $random_key = '';
+        for ($i = 0; $i < $length; $i++) {
+            $random_key .= chr(crypt_random(1, 255));
+        }
+        return $random_key;
+    }
+
+    private function generateIv() {
+        switch ($this->header['enc']) {
+            case 'A128GCM':
+            case 'A128CBC+HS256':
+                $this->iv = $this->generateRandomBytes(128 / 8);
+                break;
+            case 'A256GCM':
+            case 'A256CBC+HS512':
+                $this->iv = $this->generateRandomBytes(256 / 8);
+                break;
+            default:
+                throw new JOSEPh_Exception_UnexpectedAlgorithm('Unknown algorithm');
+        }
+    }
+
+    private function generateMasterKey($public_key_or_secret) {
+        if ($this->header['alg'] == 'dir') {
+            $this->master_key = $public_key_or_secret;
+        } else {
+            switch ($this->header['enc']) {
+                case 'A128GCM':
+                case 'A128CBC+HS256':
+                    $this->master_key = $this->generateRandomBytes(128 / 8);
+                    break;
+                case 'A256GCM':
+                case 'A256CBC+HS512':
+                    $this->master_key = $this->generateRandomBytes(256 / 8);
+                    break;
+                default:
+                    throw new JOSEPh_Exception_UnexpectedAlgorithm('Unknown algorithm');
+            }
+        }
     }
 
     private function encryptMasterKey($public_or_private_key) {
@@ -198,6 +241,16 @@ class JOSEPh_JWE extends JOSEPh_JWT {
         $this->integrity_key = $hash_function->hash(implode('', $integrity_segments));
     }
 
+    private function encryptCipherText() {
+        $cipher = $this->cipher();
+        $cipher->setKey($this->encryption_key);
+        $cipher->setIV($this->iv);
+        $this->cipher_text = $cipher->encrypt($this->plain_text);
+        if (!$this->cipher_text) {
+            throw new JOSEPh_Exception_DecryptionFailed('Payload encryption failed');
+        }
+    }
+
     private function decryptCipherText() {
         $cipher = $this->cipher();
         $cipher->setKey($this->encryption_key);
@@ -209,10 +262,44 @@ class JOSEPh_JWE extends JOSEPh_JWT {
     }
 
     private function generateIntegrityValue() {
-        # TODO
+        $this->integrity_value = $this->calculateIntegrityValue();
+    }
+
+    private function calculateIntegrityValue() {
+        switch ($this->header['enc']) {
+            case 'A128GCM':
+            case 'A256GCM':
+                throw new JOSEPh_Exception_UnexpectedAlgorithm('Algorithm not supported');
+            case 'A128CBC+HS256':
+                return $this->calculateIntegrityValueCBC(256);
+            case 'A256CBC+HS512':
+                return $this->calculateIntegrityValueCBC(512);
+            default:
+                throw new JOSEPh_Exception_UnexpectedAlgorithm('Unknown algorithm');
+        }
+    }
+
+    private function calculateIntegrityValueCBC($sha_size) {
+        $secured_input = implode('.', array(
+            $this->compact((object) $this->header),
+            $this->compact($this->encrypted_master_key),
+            $this->compact($this->iv),
+            $this->compact($this->cipher_text)
+        ));
+        return hash_hmac('sha' . $sha_size, $secured_input, $this->integrity_key, true);
     }
 
     private function checkIntegrity() {
-        # TODO
+        switch ($this->header['enc']) {
+            case 'A128GCM':
+            case 'A256GCM':
+                throw new JOSEPh_Exception_UnexpectedAlgorithm('Algorithm not supported');
+            case 'A128CBC+HS256':
+                return $this->integrity_value === $this->calculateIntegrityValueCBC(256);
+            case 'A256CBC+HS512':
+                return $this->integrity_value === $this->calculateIntegrityValueCBC(512);
+            default:
+                throw new JOSEPh_Exception_UnexpectedAlgorithm('Unknown algorithm');
+        }
     }
 }
