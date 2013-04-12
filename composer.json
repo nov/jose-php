@@ -1,0 +1,5 @@
+{
+    "require": {
+        "phpseclib/phpseclib": ">=0.3.1"
+    }
+}
