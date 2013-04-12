@@ -52,6 +52,13 @@ not supported yet
     $jwt = JOSEPh_JWT::decode($jwt_string);
     $jwt->decrypt($private_key);
 
+# Run Test
+
+    git clone git://github.com/gree/joseph.git
+    cd joseph
+    php composer.phar install --dev
+    ./vendor/bin/phpunit -c test/phpunit.xml --tap
+
 # Copyright
 
 Copyright &copy; 2013 GREE Inc. See LICENSE for details.
