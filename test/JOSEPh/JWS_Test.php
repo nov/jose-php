@@ -9,10 +9,7 @@ class JOSEPh_JWS_Test extends JOSEPh_TestCase {
         $this->plain_jwt = new JOSEPh_JWT(array(
             'foo' => 'bar'
         ));
-        $this->rsa_keys = array(
-            'public' => file_get_contents($this->fixture_dir . 'public_key.pem'),
-            'private' => file_get_contents($this->fixture_dir . 'private_key.pem')
-        );
+
     }
 
     function testSignRS256() {

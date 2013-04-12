@@ -94,6 +94,16 @@ class JOSEPh_JWT_Test extends JOSEPh_TestCase {
         $jwt = JOSEPh_JWT::decode($input);
         $this->setExpectedException('JOSEPh_Exception_VerificationFailed');
         $res = $jwt->verify('secret');
-        var_dump($res);
+    }
+
+    function testEncrypt() {
+        $jwt = new JOSEPh_JWT(array(
+            'foo' => 'bar'
+        ));
+        $jwe = $jwt->encrypt($this->rsa_keys['public']);
+
+        // 'instanceof' in PHP is actually 'is_a?' in Ruby, not 'instance_of?'
+        $this->assertEquals('JOSEPh_JWT', get_class($jwt));
+        $this->assertEquals('JOSEPh_JWE', get_class($jwe));
     }
 }

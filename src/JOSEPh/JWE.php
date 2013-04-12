@@ -147,7 +147,7 @@ class JOSEPh_JWE extends JOSEPh_JWT {
                 break;
             case 'RSA-OAEP':
                 $rsa = $this->rsa($public_or_private_key, CRYPT_RSA_ENCRYPTION_OAEP);
-                $this->encrypted_master_key = $rsa->decrypt($this->master_key);
+                $this->encrypted_master_key = $rsa->encrypt($this->master_key);
                 break;
             case 'A128KW':
             case 'A256KW':

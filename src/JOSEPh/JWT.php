@@ -73,7 +73,7 @@ class JOSEPh_JWT {
         } else {
             $stringified = $segment;
         }
-        if ($stringified === 'null' && $segment !== null) {
+        if ($stringified === 'null' && $segment !== null) { // shouldn't happen, just for safe
             throw new JOSEPh_Exception_InvalidFormat('Compact seriarization failed');
         }
         return JOSEPh_URLSafeBase64::encode($stringified);
