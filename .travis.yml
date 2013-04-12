@@ -4,4 +4,8 @@ php:
   - 5.2
   - 5.3
   - 5.4
-script: cd test & phpunit
+
+before_script:
+  - composer install
+
+script: ./vendor/bin/phpunit -c test/phpunit.xml
