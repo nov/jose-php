@@ -20,5 +20,11 @@
   },
   "require-dev": {
     "phpunit/phpunit": "~3.7.10"
+  },
+  "include-path": ["src/"],
+  "autoload": {
+    "psr-0": {
+      "JOSEPh": "src/"
+    }
   }
 }
