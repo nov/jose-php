@@ -69,7 +69,7 @@ class JOSEPh_JWT {
 
     protected function compact($segment) {
         if (is_object($segment)) {
-            $stringified = json_encode($segment);
+            $stringified = str_replace("\/", "/", json_encode($segment));
         } else {
             $stringified = $segment;
         }

@@ -13,7 +13,7 @@ class JOSEPh_JWT_Test extends JOSEPh_TestCase {
     function testToStringWithConnectClaims() {
         # NOTE:
         #  PHP converts '/' to '\/' in JSON, it can be different in other languages.
-        $expected = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJub25lIn0.eyJzdWIiOiJncmVlLXVpZC0xMjM0NSIsImlzcyI6Imh0dHBzOlwvXC9ncmVlLm5ldCIsImF1ZCI6ImdyZWUtYXBwaWQtMTIzNDUifQ.';
+        $expected = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJub25lIn0.eyJzdWIiOiJncmVlLXVpZC0xMjM0NSIsImlzcyI6Imh0dHBzOi8vZ3JlZS5uZXQiLCJhdWQiOiJncmVlLWFwcGlkLTEyMzQ1In0.';
         $jwt = new JOSEPh_JWT(array(
             'sub' => 'gree-uid-12345',
             'iss' => 'https://gree.net',
@@ -23,7 +23,7 @@ class JOSEPh_JWT_Test extends JOSEPh_TestCase {
     }
 
     function testEncode() {
-        $expected = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJub25lIn0.eyJzdWIiOiJncmVlLXVpZC0xMjM0NSIsImlzcyI6Imh0dHBzOlwvXC9ncmVlLm5ldCIsImF1ZCI6ImdyZWUtYXBwaWQtMTIzNDUifQ.';
+        $expected = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJub25lIn0.eyJzdWIiOiJncmVlLXVpZC0xMjM0NSIsImlzcyI6Imh0dHBzOi8vZ3JlZS5uZXQiLCJhdWQiOiJncmVlLWFwcGlkLTEyMzQ1In0.';
         $jwt = JOSEPh_JWT::encode(array(
             'sub' => 'gree-uid-12345',
             'iss' => 'https://gree.net',
