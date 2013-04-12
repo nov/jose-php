@@ -2,30 +2,30 @@
 
 PHP JOSE Implementation
 
-# Requirements
+## Requirements
 
 phpseclib is required.
 http://phpseclib.sourceforge.net
 
-# Example
+## Example
 
-## JWT
+### JWT
 
-### Encoding
+#### Encoding
 
     $jwt = new JOSEPh_JWT(array(
         'foo' => 'bar'
     ));
     $jwt->toString();
 
-### Decoding
+#### Decoding
 
     $jwt_string = 'eyJ...';
     $jwt = JOSEPh_JWT::decode($jwt_string);
 
-## JWS
+### JWS
 
-### Signing
+#### Signing
 
     $private_key = "-----BEGIN RSA PRIVATE KEY-----\n....";
     $jwt = new JOSEPh_JWT(array(
@@ -33,32 +33,32 @@ http://phpseclib.sourceforge.net
     ));
     $jws = $jwt->sign($private_key, 'RS256');
 
-### Verification
+#### Verification
 
     $public_key = "-----BEGIN RSA PUBLIC KEY-----\n....";
     $jwt_string = 'eyJ...';
     $jwt = JOSEPh_JWT::decode($jwt_string);
     $jwt->verify($public_key);
 
-## JWE
+### JWE
 
-### Encryption
+#### Encryption
 
 not supported yet
 
-### Decryption
+#### Decryption
 
     $jwt_string = 'eyJ...';
     $jwt = JOSEPh_JWT::decode($jwt_string);
     $jwt->decrypt($private_key);
 
-# Run Test
+## Run Test
 
     git clone git://github.com/gree/joseph.git
     cd joseph
     php composer.phar install --dev
     ./vendor/bin/phpunit -c test/phpunit.xml --tap
 
-# Copyright
+## Copyright
 
 Copyright &copy; 2013 GREE Inc. See LICENSE for details.
