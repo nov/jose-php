@@ -2,7 +2,7 @@
 
 require_once dirname(__FILE__) . '/JWT.php';
 
-class JOSEPh_JWE extends JOSEPh_JWT {
+class JOSE_JWE extends JOSE_JWT {
     var $plain_text;
     var $cipher_text;
     var $master_key;
@@ -13,7 +13,7 @@ class JOSEPh_JWE extends JOSEPh_JWT {
     var $integrity_value;
 
     function __construct($input) {
-        if ($input instanceof JOSEPh_JWT) {
+        if ($input instanceof JOSE_JWT) {
             $this->raw = $input->toString();
         } else {
             $this->raw = $input;
@@ -74,13 +74,13 @@ class JOSEPh_JWE extends JOSEPh_JWT {
         switch ($this->header['enc']) {
             case 'A128GCM':
             case 'A256GCM':
-                throw new JOSEPh_Exception_UnexpectedAlgorithm('Algorithm not supported');
+                throw new JOSE_Exception_UnexpectedAlgorithm('Algorithm not supported');
             case 'A128CBC+HS256':
             case 'A256CBC+HS512':
                 $cipher = new Crypt_AES(CRYPT_AES_MODE_CBC);
                 break;
             default:
-                throw new JOSEPh_Exception_UnexpectedAlgorithm('Unknown algorithm');
+                throw new JOSE_Exception_UnexpectedAlgorithm('Unknown algorithm');
         }
         switch ($this->header['enc']) {
             case 'A128GCM':
@@ -92,7 +92,7 @@ class JOSEPh_JWE extends JOSEPh_JWT {
                 $cipher->setBlockLength(256);
                 break;
             default:
-                throw new JOSEPh_Exception_UnexpectedAlgorithm('Unknown algorithm');
+                throw new JOSE_Exception_UnexpectedAlgorithm('Unknown algorithm');
         }
         return $cipher;
     }
@@ -116,7 +116,7 @@ class JOSEPh_JWE extends JOSEPh_JWT {
                 $this->iv = $this->generateRandomBytes(256 / 8);
                 break;
             default:
-                throw new JOSEPh_Exception_UnexpectedAlgorithm('Unknown algorithm');
+                throw new JOSE_Exception_UnexpectedAlgorithm('Unknown algorithm');
         }
     }
 
@@ -134,7 +134,7 @@ class JOSEPh_JWE extends JOSEPh_JWT {
                     $this->master_key = $this->generateRandomBytes(256 / 8);
                     break;
                 default:
-                    throw new JOSEPh_Exception_UnexpectedAlgorithm('Unknown algorithm');
+                    throw new JOSE_Exception_UnexpectedAlgorithm('Unknown algorithm');
             }
         }
     }
@@ -155,12 +155,12 @@ class JOSEPh_JWE extends JOSEPh_JWT {
             case 'ECDH-ES':
             case 'ECDH-ES+A128KW':
             case 'ECDH-ES+A256KW':
-                throw new JOSEPh_Exception_UnexpectedAlgorithm('Algorithm not supported');
+                throw new JOSE_Exception_UnexpectedAlgorithm('Algorithm not supported');
             default:
-                throw new JOSEPh_Exception_UnexpectedAlgorithm('Unknown algorithm');
+                throw new JOSE_Exception_UnexpectedAlgorithm('Unknown algorithm');
         }
         if (!$this->master_key) {
-            throw new JOSEPh_Exception_DecryptionFailed('Master key encryption failed');
+            throw new JOSE_Exception_DecryptionFailed('Master key encryption failed');
         }
     }
 
@@ -180,12 +180,12 @@ class JOSEPh_JWE extends JOSEPh_JWT {
             case 'ECDH-ES':
             case 'ECDH-ES+A128KW':
             case 'ECDH-ES+A256KW':
-                throw new JOSEPh_Exception_UnexpectedAlgorithm('Algorithm not supported');
+                throw new JOSE_Exception_UnexpectedAlgorithm('Algorithm not supported');
             default:
-                throw new JOSEPh_Exception_UnexpectedAlgorithm('Unknown algorithm');
+                throw new JOSE_Exception_UnexpectedAlgorithm('Unknown algorithm');
         }
         if (!$this->master_key) {
-            throw new JOSEPh_Exception_DecryptionFailed('Master key decryption failed');
+            throw new JOSE_Exception_DecryptionFailed('Master key decryption failed');
         }
     }
 
@@ -203,10 +203,10 @@ class JOSEPh_JWE extends JOSEPh_JWT {
                 $this->deriveEncryptionAndIntegrityKeysCBC(512);
                 break;
             default:
-                throw new JOSEPh_Exception_UnexpectedAlgorithm('Unknown algorithm');
+                throw new JOSE_Exception_UnexpectedAlgorithm('Unknown algorithm');
         }
         if (!$this->encryption_key || !$this->integrity_key) {
-            throw new JOSEPh_Exception_DecryptionFailed('Encryption/Integrity key derivation failed');
+            throw new JOSE_Exception_DecryptionFailed('Encryption/Integrity key derivation failed');
         }
     }
 
@@ -247,7 +247,7 @@ class JOSEPh_JWE extends JOSEPh_JWT {
         $cipher->setIV($this->iv);
         $this->cipher_text = $cipher->encrypt($this->plain_text);
         if (!$this->cipher_text) {
-            throw new JOSEPh_Exception_DecryptionFailed('Payload encryption failed');
+            throw new JOSE_Exception_DecryptionFailed('Payload encryption failed');
         }
     }
 
@@ -257,7 +257,7 @@ class JOSEPh_JWE extends JOSEPh_JWT {
         $cipher->setIV($this->iv);
         $this->plain_text = $cipher->decrypt($this->cipher_text);
         if (!$this->plain_text) {
-            throw new JOSEPh_Exception_DecryptionFailed('Payload decryption failed');
+            throw new JOSE_Exception_DecryptionFailed('Payload decryption failed');
         }
     }
 
@@ -269,13 +269,13 @@ class JOSEPh_JWE extends JOSEPh_JWT {
         switch ($this->header['enc']) {
             case 'A128GCM':
             case 'A256GCM':
-                throw new JOSEPh_Exception_UnexpectedAlgorithm('Algorithm not supported');
+                throw new JOSE_Exception_UnexpectedAlgorithm('Algorithm not supported');
             case 'A128CBC+HS256':
                 return $this->calculateIntegrityValueCBC(256);
             case 'A256CBC+HS512':
                 return $this->calculateIntegrityValueCBC(512);
             default:
-                throw new JOSEPh_Exception_UnexpectedAlgorithm('Unknown algorithm');
+                throw new JOSE_Exception_UnexpectedAlgorithm('Unknown algorithm');
         }
     }
 
@@ -293,13 +293,13 @@ class JOSEPh_JWE extends JOSEPh_JWT {
         switch ($this->header['enc']) {
             case 'A128GCM':
             case 'A256GCM':
-                throw new JOSEPh_Exception_UnexpectedAlgorithm('Algorithm not supported');
+                throw new JOSE_Exception_UnexpectedAlgorithm('Algorithm not supported');
             case 'A128CBC+HS256':
                 return $this->integrity_value === $this->calculateIntegrityValueCBC(256);
             case 'A256CBC+HS512':
                 return $this->integrity_value === $this->calculateIntegrityValueCBC(512);
             default:
-                throw new JOSEPh_Exception_UnexpectedAlgorithm('Unknown algorithm');
+                throw new JOSE_Exception_UnexpectedAlgorithm('Unknown algorithm');
         }
     }
 }

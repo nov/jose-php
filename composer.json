@@ -24,7 +24,7 @@
   "include-path": ["src/"],
   "autoload": {
     "psr-0": {
-      "JOSEPh": "src/"
+      "JOSE": "src/"
     }
   }
 }

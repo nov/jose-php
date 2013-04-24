@@ -2,7 +2,7 @@
 
 require_once dirname(__FILE__) . '/JWT.php';
 
-class JOSEPh_JWS extends JOSEPh_JWT {
+class JOSE_JWS extends JOSE_JWT {
     function __construct($jwt) {
         $this->header = $jwt->header;
         $this->claims = $jwt->claims;
@@ -14,7 +14,7 @@ class JOSEPh_JWS extends JOSEPh_JWT {
         $this->header['alg'] = $algorithm;
         $this->signature = $this->_sign($private_key_or_secret);
         if (!$this->signature) {
-            throw new JOSEPh_Exception('Signing failed because of unknown reason');
+            throw new JOSE_Exception('Signing failed because of unknown reason');
         }
         return $this;
     }
@@ -23,7 +23,7 @@ class JOSEPh_JWS extends JOSEPh_JWT {
         if ($this->_verify($public_key_or_secret)) {
             return $this;
         } else {
-            throw new JOSEPh_Exception_VerificationFailed('Signature verification failed');
+            throw new JOSE_Exception_VerificationFailed('Signature verification failed');
         }
     }
 
@@ -50,7 +50,7 @@ class JOSEPh_JWS extends JOSEPh_JWT {
             case 'ES512':
                 return 'sha512';
             default:
-                throw new JOSEPh_Exception_UnexpectedAlgorithm('Unknown algorithm');
+                throw new JOSE_Exception_UnexpectedAlgorithm('Unknown algorithm');
         }
     }
 
@@ -71,9 +71,9 @@ class JOSEPh_JWS extends JOSEPh_JWT {
             case 'ES256':
             case 'ES384':
             case 'ES512':
-                throw new JOSEPh_Exception_UnexpectedAlgorithm('Algorithm not supported');
+                throw new JOSE_Exception_UnexpectedAlgorithm('Algorithm not supported');
             default:
-                throw new JOSEPh_Exception_UnexpectedAlgorithm('Unknown algorithm');
+                throw new JOSE_Exception_UnexpectedAlgorithm('Unknown algorithm');
         }
     }
 
@@ -92,9 +92,9 @@ class JOSEPh_JWS extends JOSEPh_JWT {
             case 'ES256':
             case 'ES384':
             case 'ES512':
-                throw new JOSEPh_Exception_UnexpectedAlgorithm('Algorithm not supported');
+                throw new JOSE_Exception_UnexpectedAlgorithm('Algorithm not supported');
             default:
-                throw new JOSEPh_Exception_UnexpectedAlgorithm('Unknown algorithm');
+                throw new JOSE_Exception_UnexpectedAlgorithm('Unknown algorithm');
         }
     }
 }

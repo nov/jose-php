@@ -1,12 +1,12 @@
 <?php
 
-class JOSEPh_JWT_Test extends JOSEPh_TestCase {
+class JOSE_JWT_Test extends JOSE_TestCase {
     function testToStringWithBlankClaims() {
         # NOTE:
         #  PHP isn't good at handling blank JSON object.
         #  json_encode(array()) => '[]'
         $expected = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJub25lIn0.e30.';
-        $jwt = new JOSEPh_JWT();
+        $jwt = new JOSE_JWT();
         $this->assertEquals($expected, $jwt->toString());
     }
 
@@ -14,7 +14,7 @@ class JOSEPh_JWT_Test extends JOSEPh_TestCase {
         # NOTE:
         #  PHP converts '/' to '\/' in JSON, it can be different in other languages.
         $expected = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJub25lIn0.eyJzdWIiOiJncmVlLXVpZC0xMjM0NSIsImlzcyI6Imh0dHBzOi8vZ3JlZS5uZXQiLCJhdWQiOiJncmVlLWFwcGlkLTEyMzQ1In0.';
-        $jwt = new JOSEPh_JWT(array(
+        $jwt = new JOSE_JWT(array(
             'sub' => 'gree-uid-12345',
             'iss' => 'https://gree.net',
             'aud' => 'gree-appid-12345'
@@ -24,7 +24,7 @@ class JOSEPh_JWT_Test extends JOSEPh_TestCase {
 
     function testEncode() {
         $expected = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJub25lIn0.eyJzdWIiOiJncmVlLXVpZC0xMjM0NSIsImlzcyI6Imh0dHBzOi8vZ3JlZS5uZXQiLCJhdWQiOiJncmVlLWFwcGlkLTEyMzQ1In0.';
-        $jwt = JOSEPh_JWT::encode(array(
+        $jwt = JOSE_JWT::encode(array(
             'sub' => 'gree-uid-12345',
             'iss' => 'https://gree.net',
             'aud' => 'gree-appid-12345'
@@ -46,27 +46,27 @@ class JOSEPh_JWT_Test extends JOSEPh_TestCase {
                 'aud' => 'gree-appid-12345'
             )
         );
-        $jwt = JOSEPh_JWT::decode($input);
+        $jwt = JOSE_JWT::decode($input);
         $this->assertEquals($expected['header'], (array) $jwt->header);
         $this->assertEquals($expected['claims'], (array) $jwt->claims);
     }
 
     function testDecodeWithTooManyDots() {
         $input = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJub25lIiwiZm9vIjoiZm9vIn0.eyJzdWIiOiJncmVlLXVpZC0xMjM0NSIsImlzcyI6Imh0dHBzOlwvXC9ncmVlLm5ldCIsImF1ZCI6ImdyZWUtYXBwaWQtMTIzNDUifQ..';
-        $this->setExpectedException('JOSEPh_Exception_InvalidFormat');
-        JOSEPh_JWT::decode($input);
+        $this->setExpectedException('JOSE_Exception_InvalidFormat');
+        JOSE_JWT::decode($input);
     }
 
     function testDecodeWithTooFewDots() {
         $input = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJub25lIiwiZm9vIjoiZm9vIn0.eyJzdWIiOiJncmVlLXVpZC0xMjM0NSIsImlzcyI6Imh0dHBzOlwvXC9ncmVlLm5ldCIsImF1ZCI6ImdyZWUtYXBwaWQtMTIzNDUifQ';
-        $this->setExpectedException('JOSEPh_Exception_InvalidFormat');
-        JOSEPh_JWT::decode($input);
+        $this->setExpectedException('JOSE_Exception_InvalidFormat');
+        JOSE_JWT::decode($input);
     }
 
     function testDecodeWithInvalidSerialization() {
         $input = 'header.payload.signature';
-        $this->setExpectedException('JOSEPh_Exception_InvalidFormat');
-        JOSEPh_JWT::decode($input);
+        $this->setExpectedException('JOSE_Exception_InvalidFormat');
+        JOSE_JWT::decode($input);
     }
 
     function testSign() {
@@ -75,7 +75,7 @@ class JOSEPh_JWT_Test extends JOSEPh_TestCase {
             'jws' => 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmb28iOiJiYXIifQ.bVhBeMrW5g33Vi4FLSLn7aqcmAiupmmw-AY17YxCYLI'
         );
         $expected_with_signature = '';
-        $jwt = new JOSEPh_JWT(array(
+        $jwt = new JOSE_JWT(array(
             'foo' => 'bar'
         ));
         $jws = $jwt->sign('secret');
@@ -85,25 +85,25 @@ class JOSEPh_JWT_Test extends JOSEPh_TestCase {
 
     function testVerify() {
         $input = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmb28iOiJiYXIifQ.bVhBeMrW5g33Vi4FLSLn7aqcmAiupmmw-AY17YxCYLI';
-        $jwt = JOSEPh_JWT::decode($input);
-        $this->assertInstanceOf('JOSEPh_JWS', $jwt->verify('secret'));
+        $jwt = JOSE_JWT::decode($input);
+        $this->assertInstanceOf('JOSE_JWS', $jwt->verify('secret'));
     }
 
     function testVerifyInvalid() {
         $input = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmb28iOiJiYXIifQ.bVhBeMrW5g33Vi4FLSLn7aqcmAiupmmw-AY17YxCYLI-invalid';
-        $jwt = JOSEPh_JWT::decode($input);
-        $this->setExpectedException('JOSEPh_Exception_VerificationFailed');
+        $jwt = JOSE_JWT::decode($input);
+        $this->setExpectedException('JOSE_Exception_VerificationFailed');
         $res = $jwt->verify('secret');
     }
 
     function testEncrypt() {
-        $jwt = new JOSEPh_JWT(array(
+        $jwt = new JOSE_JWT(array(
             'foo' => 'bar'
         ));
         $jwe = $jwt->encrypt($this->rsa_keys['public']);
 
         // 'instanceof' in PHP is actually 'is_a?' in Ruby, not 'instance_of?'
-        $this->assertEquals('JOSEPh_JWT', get_class($jwt));
-        $this->assertEquals('JOSEPh_JWE', get_class($jwe));
+        $this->assertEquals('JOSE_JWT', get_class($jwt));
+        $this->assertEquals('JOSE_JWE', get_class($jwe));
     }
 }

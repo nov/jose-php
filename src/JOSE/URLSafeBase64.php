@@ -1,6 +1,6 @@
 <?php
 
-class JOSEPh_URLSafeBase64 {
+class JOSE_URLSafeBase64 {
     static function encode($input) {
         return str_replace('=', '', strtr(base64_encode($input), '+/', '-_'));
     }

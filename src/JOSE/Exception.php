@@ -1,6 +1,6 @@
 <?php
 
-class JOSEPh_Exception extends Exception {
+class JOSE_Exception extends Exception {
 }
 
 require_once dirname(__FILE__) . '/Exception/DecryptionFailed.php';

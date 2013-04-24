@@ -1,6 +1,6 @@
 <?php
 
-require_once dirname(__FILE__) . '/../src/JOSEPh/JWT.php';
+require_once dirname(__FILE__) . '/../src/JOSE/JWT.php';
 
 // an example of OpenID Connect ID Token implementation
 
@@ -8,7 +8,7 @@ class IdToken {
     var $jwt;
 
     function __construct($claims = array()) {
-        $this->jwt = new JOSEPh_JWT($claims);
+        $this->jwt = new JOSE_JWT($claims);
     }
 
     function sign($private_key_or_secret, $algorithm = 'RS256') {

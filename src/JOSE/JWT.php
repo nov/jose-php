@@ -7,7 +7,7 @@ require_once dirname(__FILE__) . '/JWS.php';
 require_once dirname(__FILE__) . '/JWE.php';
 require_once dirname(__FILE__) . '/URLSafeBase64.php';
 
-class JOSEPh_JWT {
+class JOSE_JWT {
     var $header = array(
         'typ' => 'JWT',
         'alg' => 'none'
@@ -41,7 +41,7 @@ class JOSEPh_JWT {
     }
 
     function encrypt($public_key_or_secret, $algorithm = 'RSA1_5', $encryption_method = 'A128CBC+HS256') {
-        $jwe = new JOSEPh_JWE($this);
+        $jwe = new JOSE_JWE($this);
         $jwe->encrypt($public_key_or_secret, $algorithm, $encryption_method);
         return $jwe;
     }
@@ -61,9 +61,9 @@ class JOSEPh_JWT {
                 $jwt->signature = $jwt->extract($segments[2], 'as_binary');
                 return $jwt;
             case 5:
-                return new JOSEPh_JWE($jwt_string);
+                return new JOSE_JWE($jwt_string);
             default:
-                throw new JOSEPh_Exception_InvalidFormat('JWT should have exact 3 or 5 segments');
+                throw new JOSE_Exception_InvalidFormat('JWT should have exact 3 or 5 segments');
         }
     }
 
@@ -74,25 +74,25 @@ class JOSEPh_JWT {
             $stringified = $segment;
         }
         if ($stringified === 'null' && $segment !== null) { // shouldn't happen, just for safe
-            throw new JOSEPh_Exception_InvalidFormat('Compact seriarization failed');
+            throw new JOSE_Exception_InvalidFormat('Compact seriarization failed');
         }
-        return JOSEPh_URLSafeBase64::encode($stringified);
+        return JOSE_URLSafeBase64::encode($stringified);
     }
 
     protected function extract($segment, $as_binary = false) {
-        $stringified = JOSEPh_URLSafeBase64::decode($segment);
+        $stringified = JOSE_URLSafeBase64::decode($segment);
         if ($as_binary) {
             $extracted = $stringified;
         } else {
             $extracted = json_decode($stringified);
             if ($stringified !== 'null' && $extracted === null) {
-                throw new JOSEPh_Exception_InvalidFormat('Compact de-serialization failed');
+                throw new JOSE_Exception_InvalidFormat('Compact de-serialization failed');
             }
         }
         return $extracted;
     }
 
     private function toJWS() {
-        return new JOSEPh_JWS($this);
+        return new JOSE_JWS($this);
     }
 }

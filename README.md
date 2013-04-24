@@ -1,4 +1,4 @@
-# JOSEPh
+# JOSE
 
 PHP JOSE Implementation
 
@@ -13,7 +13,7 @@ http://phpseclib.sourceforge.net
 
 #### Encoding
 
-    $jwt = new JOSEPh_JWT(array(
+    $jwt = new JOSE_JWT(array(
         'foo' => 'bar'
     ));
     $jwt->toString();
@@ -21,14 +21,14 @@ http://phpseclib.sourceforge.net
 #### Decoding
 
     $jwt_string = 'eyJ...';
-    $jwt = JOSEPh_JWT::decode($jwt_string);
+    $jwt = JOSE_JWT::decode($jwt_string);
 
 ### JWS
 
 #### Signing
 
     $private_key = "-----BEGIN RSA PRIVATE KEY-----\n....";
-    $jwt = new JOSEPh_JWT(array(
+    $jwt = new JOSE_JWT(array(
         'foo' => 'bar'
     ));
     $jws = $jwt->sign($private_key, 'RS256');
@@ -37,7 +37,7 @@ http://phpseclib.sourceforge.net
 
     $public_key = "-----BEGIN RSA PUBLIC KEY-----\n....";
     $jwt_string = 'eyJ...';
-    $jwt = JOSEPh_JWT::decode($jwt_string);
+    $jwt = JOSE_JWT::decode($jwt_string);
     $jwt->verify($public_key);
 
 ### JWE
@@ -49,7 +49,7 @@ not supported yet
 #### Decryption
 
     $jwt_string = 'eyJ...';
-    $jwt = JOSEPh_JWT::decode($jwt_string);
+    $jwt = JOSE_JWT::decode($jwt_string);
     $jwt->decrypt($private_key);
 
 ## Run Test
