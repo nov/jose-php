@@ -1,6 +1,6 @@
 # JOSE
 
-PHP JOSE Implementation
+PHP JOSE (Javascript Object Signing and Encryption) Implementation
 
 ## Requirements
 
