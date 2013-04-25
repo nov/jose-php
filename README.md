@@ -54,8 +54,8 @@ not supported yet
 
 ## Run Test
 
-    git clone git://github.com/gree/joseph.git
-    cd joseph
+    git clone git://github.com/gree/jose.git
+    cd jose
     php composer.phar install --dev
     ./vendor/bin/phpunit -c test/phpunit.xml --tap
 
