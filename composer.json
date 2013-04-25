@@ -1,11 +1,11 @@
 {
-  "name": "gree/joseph",
+  "name": "gree/jose",
   "description": "JWT, JWS and JWS implementation in PHP",
   "keywords": [
     "JSON Web Token", "JSON Web Signature", "JSON Web Encryption",
     "JWT", "JWS", "JWE", "JOSE", "OpenID Connect", "ID Token"
   ],
-  "homepage": "https://github.com/gree/joseph",
+  "homepage": "https://github.com/gree/jose",
   "license": "MIT",
   "type": "library",
   "authors": [
