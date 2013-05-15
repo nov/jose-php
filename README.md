@@ -40,7 +40,8 @@ http://phpseclib.sourceforge.net
     $public_key = "-----BEGIN RSA PUBLIC KEY-----\n....";
     $jwt_string = 'eyJ...';
     $jwt = JOSE_JWT::decode($jwt_string);
-    $jwt->verify($public_key);
+    $jws = new JOSE_JWS($jwt);
+    $jws->verify($public_key);
 
 ### JWE
 
