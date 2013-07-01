@@ -98,11 +98,7 @@ class JOSE_JWE extends JOSE_JWT {
     }
 
     private function generateRandomBytes($length) {
-        $random_key = '';
-        for ($i = 0; $i < $length; $i++) {
-            $random_key .= chr(crypt_random(1, 255));
-        }
-        return $random_key;
+        return crypt_random_string($length);
     }
 
     private function generateIv() {
