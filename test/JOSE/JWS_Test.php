@@ -87,4 +87,15 @@ class JOSE_JWS_Test extends JOSE_TestCase {
         $this->setExpectedException('JOSE_Exception_UnexpectedAlgorithm');
         $jws = $jws->verify('no key works');
     }
+
+    function testVerifyWithGoogleIDToken() {
+        $id_token_string = file_get_contents($this->fixture_dir . 'google.jwt');
+        $cert_string = file_get_contents($this->fixture_dir . 'google.crt');
+        $x509 = new File_X509();
+        $x509->loadX509($cert_string);
+        $public_key = $x509->getPublicKey()->getPublicKey();
+        $jwt = JOSE_JWT::decode($id_token_string);
+        $jws = new JOSE_JWS($jwt);
+        $this->assertInstanceOf('JOSE_JWS', $jws->verify($public_key));
+    }
 }
