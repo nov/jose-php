@@ -51,7 +51,7 @@ class JOSE_JWE extends JOSE_JWT {
             $key = $private_key_or_secret($kid);
         }
         
-        $this->decryptMasterKey($private_key_or_secret);
+        $this->decryptMasterKey($key);
         $this->deriveEncryptionAndIntegrityKeys();
         $this->decryptCipherText();
         $this->checkIntegrity();
