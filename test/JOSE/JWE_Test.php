@@ -85,7 +85,7 @@ class JOSE_JWE_Test extends JOSE_TestCase {
         $jwe = new JOSE_JWE($input);
         $self = $this;
         $jwe->decrypt(function($kid) use($self){
-            $self->rsa_keys['private'];
+            return $self->rsa_keys['private'];
         });
         $this->assertEquals($this->plain_text, $jwe->plain_text);
     }
