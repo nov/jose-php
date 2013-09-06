@@ -43,7 +43,12 @@ class JOSE_JWE extends JOSE_JWT {
         
         $key = $private_key_or_secret;
         if(is_callable($private_key_or_secret)) {
-            $key = $private_key_or_secret($this->header['kid']);
+            $kid = null;
+            if(isset($this->header['kid'])) {
+                $kid = $this->header['kid'];
+            }
+            
+            $key = $private_key_or_secret($kid);
         }
         
         $this->decryptMasterKey($private_key_or_secret);
