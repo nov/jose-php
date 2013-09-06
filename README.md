@@ -2,7 +2,7 @@
 
 PHP JOSE (Javascript Object Signing and Encryption) Implementation
 
-[![Build Status](https://travis-ci.org/peter-svintsitskyi/jose-php.png?branch=master)](https://travis-ci.org/peter-svintsitskyi/jose)
+[![Build Status](https://travis-ci.org/peter-svintsitskyi/jose.png?branch=master)](https://travis-ci.org/peter-svintsitskyi/jose)
 
 ## Requirements
 
