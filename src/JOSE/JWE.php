@@ -34,8 +34,18 @@ class JOSE_JWE extends JOSE_JWT {
         return $this;
     }
 
+    /**
+     *
+     * @param string|callback $private_key_or_secret - either private key or a callback that returns key depending on 'kid' header value
+     */
     function decrypt($private_key_or_secret) {
         $this->_decode();
+        
+        $key = $private_key_or_secret;
+        if(is_callable($private_key_or_secret)) {
+            $key = $private_key_or_secret($this->header['kid']);
+        }
+        
         $this->decryptMasterKey($private_key_or_secret);
         $this->deriveEncryptionAndIntegrityKeys();
         $this->decryptCipherText();
