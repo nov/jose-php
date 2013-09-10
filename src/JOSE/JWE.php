@@ -12,7 +12,7 @@ class JOSE_JWE extends JOSE_JWT {
     var $iv;
     var $integrity_value;
 
-    function __construct($input) {
+    function __construct($input = null) {
         if ($input instanceof JOSE_JWT) {
             $this->raw = $input->toString();
         } else {
@@ -34,24 +34,8 @@ class JOSE_JWE extends JOSE_JWT {
         return $this;
     }
 
-    /**
-     *
-     * @param string|callback $private_key_or_secret - either private key or a callback that returns key depending on 'kid' header value
-     */
     function decrypt($private_key_or_secret) {
-        $this->_decode();
-        
-        $key = $private_key_or_secret;
-        if(is_callable($private_key_or_secret)) {
-            $kid = null;
-            if(isset($this->header['kid'])) {
-                $kid = $this->header['kid'];
-            }
-            
-            $key = $private_key_or_secret($kid);
-        }
-        
-        $this->decryptMasterKey($key);
+        $this->decryptMasterKey($private_key_or_secret);
         $this->deriveEncryptionAndIntegrityKeys();
         $this->decryptCipherText();
         $this->checkIntegrity();
@@ -66,16 +50,6 @@ class JOSE_JWE extends JOSE_JWT {
             $this->compact($this->cipher_text),
             $this->compact($this->integrity_value)
         ));
-    }
-
-    private function _decode() {
-        $segments = explode('.', $this->raw);
-        $this->header       = (array) $this->extract($segments[0]);
-        $this->encrypted_master_key = $this->extract($segments[1], 'as_binary');
-        $this->iv                   = $this->extract($segments[2], 'as_binary');
-        $this->cipher_text          = $this->extract($segments[3], 'as_binary');
-        $this->integrity_value      = $this->extract($segments[4], 'integrity_value');
-        return $this;
     }
 
     private function rsa($public_or_private_key, $padding_mode) {

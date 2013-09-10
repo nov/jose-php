@@ -58,10 +58,16 @@ class JOSE_JWT {
                 $jwt->raw = $jwt_string;
                 $jwt->header = (array) $jwt->extract($segments[0]);
                 $jwt->claims = (array) $jwt->extract($segments[1]);
-                $jwt->signature = $jwt->extract($segments[2], 'as_binary');
+                $jwt->signature      = $jwt->extract($segments[2], 'as_binary');
                 return $jwt;
             case 5:
-                return new JOSE_JWE($jwt_string);
+                $jwe = new JOSE_JWE();
+                $jwe->header       = (array) $jwe->extract($segments[0]);
+                $jwe->encrypted_master_key = $jwe->extract($segments[1], 'as_binary');
+                $jwe->iv                   = $jwe->extract($segments[2], 'as_binary');
+                $jwe->cipher_text          = $jwe->extract($segments[3], 'as_binary');
+                $jwe->integrity_value      = $jwe->extract($segments[4], 'as_binary');
+                return $jwe;
             default:
                 throw new JOSE_Exception_InvalidFormat('JWT should have exact 3 or 5 segments');
         }
