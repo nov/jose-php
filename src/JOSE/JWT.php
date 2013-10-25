@@ -40,7 +40,7 @@ class JOSE_JWT {
         return $jws;
     }
 
-    function encrypt($public_key_or_secret, $algorithm = 'RSA1_5', $encryption_method = 'A128CBC+HS256') {
+    function encrypt($public_key_or_secret, $algorithm = 'RSA1_5', $encryption_method = 'A128CBC-HS256') {
         $jwe = new JOSE_JWE($this);
         $jwe->encrypt($public_key_or_secret, $algorithm, $encryption_method);
         return $jwe;
@@ -62,11 +62,11 @@ class JOSE_JWT {
                 return $jwt;
             case 5:
                 $jwe = new JOSE_JWE();
-                $jwe->header       = (array) $jwe->extract($segments[0]);
-                $jwe->encrypted_master_key = $jwe->extract($segments[1], 'as_binary');
-                $jwe->iv                   = $jwe->extract($segments[2], 'as_binary');
-                $jwe->cipher_text          = $jwe->extract($segments[3], 'as_binary');
-                $jwe->integrity_value      = $jwe->extract($segments[4], 'as_binary');
+                $jwe->header     = (array) $jwe->extract($segments[0]);
+                $jwe->jwe_encrypted_key  = $jwe->extract($segments[1], 'as_binary');
+                $jwe->iv                 = $jwe->extract($segments[2], 'as_binary');
+                $jwe->cipher_text        = $jwe->extract($segments[3], 'as_binary');
+                $jwe->authentication_tag = $jwe->extract($segments[4], 'as_binary');
                 return $jwe;
             default:
                 throw new JOSE_Exception_InvalidFormat('JWT should have exact 3 or 5 segments');
