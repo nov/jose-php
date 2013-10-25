@@ -11,6 +11,7 @@ class JOSE_JWE extends JOSE_JWT {
     var $mac_key;
     var $iv;
     var $authentication_tag;
+    var $auth_data;
 
     function __construct($input = null) {
         if ($input instanceof JOSE_JWT) {
@@ -196,7 +197,7 @@ class JOSE_JWE extends JOSE_JWT {
     }
 
     private function deriveEncryptionAndMacKeysCBC($sha_size) {
-        $this->mac_key = substr($this->content_encryption_key, 0, $sha_size / 2 / 8 - 1);
+        $this->mac_key = substr($this->content_encryption_key, 0, $sha_size / 2 / 8);
         $this->encryption_key = substr($this->content_encryption_key, $sha_size / 2 / 8);
     }
 
@@ -224,7 +225,7 @@ class JOSE_JWE extends JOSE_JWT {
         $this->authentication_tag = $this->calculateAuthenticationTag();
     }
 
-    private function calculateAuthenticationTag() {
+    private function calculateAuthenticationTag($use_raw = false) {
         switch ($this->header['enc']) {
             case 'A128GCM':
             case 'A256GCM':
@@ -239,27 +240,29 @@ class JOSE_JWE extends JOSE_JWT {
     }
 
     private function calculateAuthenticationTagCBC($sha_size) {
-        $auth_data = $this->compact((object) $this->header);
-        $secured_input = implode('.', array(
-            $auth_data,
+        if (!$this->auth_data) {
+            $this->auth_data = $this->compact((object) $this->header);
+        }
+        $auth_data_length = strlen($this->auth_data);
+        $max_32bit = 2147483647;
+        $secured_input = implode('', array(
+            $this->auth_data,
             $this->iv,
-            $this->compact($this->cipher_text),
-            join('', array(pack('N*', strlen($auth_data)))) // TODO: needs 64-bit big endian
+            $this->cipher_text,
+            // NOTE: PHP doesn't support 64bit big endian, so handling upper & lower 32bit.
+            pack('N2', ($auth_data_length / $max_32bit) * 8, ($auth_data_length % $max_32bit) * 8)
         ));
-        return hash_hmac('sha' . $sha_size, $secured_input, $this->mac_key, true);
+        return substr(
+            hash_hmac('sha' . $sha_size, $secured_input, $this->mac_key, true),
+            0, $sha_size / 2 / 8
+        );
     }
 
     private function checkAuthenticationTag() {
-        switch ($this->header['enc']) {
-            case 'A128GCM':
-            case 'A256GCM':
-                throw new JOSE_Exception_UnexpectedAlgorithm('Algorithm not supported');
-            case 'A128CBC-HS256':
-                return $this->authentication_tag === $this->calculateAuthenticationTagCBC(256);
-            case 'A256CBC-HS512':
-                return $this->authentication_tag === $this->calculateAuthenticationTagCBC(512);
-            default:
-                throw new JOSE_Exception_UnexpectedAlgorithm('Unknown algorithm');
+        if ($this->authentication_tag === $this->calculateAuthenticationTag()) {
+            return true;
+        } else {
+            throw new JOSE_Exception_UnexpectedAlgorithm('Invalid authentication tag');
         }
     }
 }

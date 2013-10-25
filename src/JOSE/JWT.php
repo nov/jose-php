@@ -61,7 +61,8 @@ class JOSE_JWT {
                 $jwt->signature      = $jwt->extract($segments[2], 'as_binary');
                 return $jwt;
             case 5:
-                $jwe = new JOSE_JWE();
+                $jwe = new JOSE_JWE($jwt_string);
+                $jwe->auth_data  = $segments[0];
                 $jwe->header     = (array) $jwe->extract($segments[0]);
                 $jwe->jwe_encrypted_key  = $jwe->extract($segments[1], 'as_binary');
                 $jwe->iv                 = $jwe->extract($segments[2], 'as_binary');
