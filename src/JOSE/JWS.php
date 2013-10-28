@@ -27,11 +27,11 @@ class JOSE_JWS extends JOSE_JWT {
         }
     }
 
-    private function rsa($public_or_private_key, $mode = CRYPT_RSA_SIGNATURE_PKCS1) {
+    private function rsa($public_or_private_key, $padding_mode = CRYPT_RSA_SIGNATURE_PKCS1) {
         $rsa = new Crypt_RSA();
         $rsa->loadKey($public_or_private_key);
         $rsa->setHash($this->digest());
-        $rsa->setSignatureMode($mode);
+        $rsa->setSignatureMode($padding_mode);
         return $rsa;
     }
 
