@@ -27,11 +27,11 @@ class JOSE_JWS extends JOSE_JWT {
         }
     }
 
-    private function rsa($public_or_private_key) {
+    private function rsa($public_or_private_key, $padding_mode) {
         $rsa = new Crypt_RSA();
         $rsa->loadKey($public_or_private_key);
         $rsa->setHash($this->digest());
-        $rsa->setSignatureMode(CRYPT_RSA_SIGNATURE_PKCS1);
+        $rsa->setSignatureMode($padding_mode);
         return $rsa;
     }
 
@@ -40,14 +40,17 @@ class JOSE_JWS extends JOSE_JWT {
             case 'HS256':
             case 'RS256':
             case 'ES256':
+            case 'PS256':
                 return 'sha256';
             case 'HS384':
             case 'RS384':
             case 'ES384':
+            case 'PS384':
                 return 'sha384';
             case 'HS512':
             case 'RS512':
             case 'ES512':
+            case 'PS512':
                 return 'sha512';
             default:
                 throw new JOSE_Exception_UnexpectedAlgorithm('Unknown algorithm');
@@ -67,11 +70,15 @@ class JOSE_JWS extends JOSE_JWT {
             case 'RS256':
             case 'RS384':
             case 'RS512':
-                return $this->rsa($private_key_or_secret)->sign($signature_base_string);
+                return $this->rsa($private_key_or_secret, CRYPT_RSA_SIGNATURE_PKCS1)->sign($signature_base_string);
             case 'ES256':
             case 'ES384':
             case 'ES512':
                 throw new JOSE_Exception_UnexpectedAlgorithm('Algorithm not supported');
+            case 'PS256':
+            case 'PS384':
+            case 'PS512':
+                return $this->rsa($private_key_or_secret, CRYPT_RSA_SIGNATURE_PSS)->sign($signature_base_string);
             default:
                 throw new JOSE_Exception_UnexpectedAlgorithm('Unknown algorithm');
         }
@@ -88,11 +95,15 @@ class JOSE_JWS extends JOSE_JWT {
             case 'RS256':
             case 'RS384':
             case 'RS512':
-                return $this->rsa($public_key_or_secret)->verify($signature_base_string, $this->signature);
+                return $this->rsa($public_key_or_secret, CRYPT_RSA_SIGNATURE_PKCS1)->verify($signature_base_string, $this->signature);
             case 'ES256':
             case 'ES384':
             case 'ES512':
                 throw new JOSE_Exception_UnexpectedAlgorithm('Algorithm not supported');
+            case 'PS256':
+            case 'PS384':
+            case 'PS512':
+                return $this->rsa($public_key_or_secret, CRYPT_RSA_SIGNATURE_PSS)->verify($signature_base_string, $this->signature);
             default:
                 throw new JOSE_Exception_UnexpectedAlgorithm('Unknown algorithm');
         }
