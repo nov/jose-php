@@ -59,7 +59,10 @@ class JOSE_JWS_Test extends JOSE_TestCase {
         $jws = new JOSE_JWS($this->plain_jwt);
         $jws = $jws->sign($this->rsa_keys['private'], 'PS256');
         # NOTE: RSA-PSS generates different signature each time
-        $this->assertEquals(explode('.', $expected)[0], explode('.', $jws->toString())[0]);
+        $expected_segments = explode('.', $expected);
+        $given_segments = explode('.', $jws->toString());
+        $this->assertEquals($expected_segments[0], $given_segments[0]);
+        $this->assertEquals($expected_segments[1], $given_segments[1]);
     }
 
     function testSignPS384() {
@@ -67,7 +70,10 @@ class JOSE_JWS_Test extends JOSE_TestCase {
         $jws = new JOSE_JWS($this->plain_jwt);
         $jws = $jws->sign($this->rsa_keys['private'], 'PS384');
         # NOTE: RSA-PSS generates different signature each time
-        $this->assertEquals(explode('.', $expected)[0], explode('.', $jws->toString())[0]);
+        $expected_segments = explode('.', $expected);
+        $given_segments = explode('.', $jws->toString());
+        $this->assertEquals($expected_segments[0], $given_segments[0]);
+        $this->assertEquals($expected_segments[1], $given_segments[1]);
     }
 
     function testSignPS512() {
@@ -75,7 +81,10 @@ class JOSE_JWS_Test extends JOSE_TestCase {
         $jws = new JOSE_JWS($this->plain_jwt);
         $jws = $jws->sign($this->rsa_keys['private'], 'PS512');
         # NOTE: RSA-PSS generates different signature each time
-        $this->assertEquals(explode('.', $expected)[0], explode('.', $jws->toString())[0]);
+        $expected_segments = explode('.', $expected);
+        $given_segments = explode('.', $jws->toString());
+        $this->assertEquals($expected_segments[0], $given_segments[0]);
+        $this->assertEquals($expected_segments[1], $given_segments[1]);
     }
 
     function testSignRS256WithInvalidPrivateKey() {
