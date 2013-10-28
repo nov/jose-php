@@ -27,7 +27,7 @@ class JOSE_JWS extends JOSE_JWT {
         }
     }
 
-    private function rsa($public_or_private_key, $padding_mode = CRYPT_RSA_SIGNATURE_PKCS1) {
+    private function rsa($public_or_private_key, $padding_mode) {
         $rsa = new Crypt_RSA();
         $rsa->loadKey($public_or_private_key);
         $rsa->setHash($this->digest());
@@ -70,7 +70,7 @@ class JOSE_JWS extends JOSE_JWT {
             case 'RS256':
             case 'RS384':
             case 'RS512':
-                return $this->rsa($private_key_or_secret)->sign($signature_base_string);
+                return $this->rsa($private_key_or_secret, CRYPT_RSA_SIGNATURE_PKCS1)->sign($signature_base_string);
             case 'ES256':
             case 'ES384':
             case 'ES512':
@@ -95,7 +95,7 @@ class JOSE_JWS extends JOSE_JWT {
             case 'RS256':
             case 'RS384':
             case 'RS512':
-                return $this->rsa($public_key_or_secret)->verify($signature_base_string, $this->signature);
+                return $this->rsa($public_key_or_secret, CRYPT_RSA_SIGNATURE_PKCS1)->verify($signature_base_string, $this->signature);
             case 'ES256':
             case 'ES384':
             case 'ES512':
