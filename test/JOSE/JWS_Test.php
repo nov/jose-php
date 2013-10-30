@@ -55,7 +55,7 @@ class JOSE_JWS_Test extends JOSE_TestCase {
     }
 
     function testSignPS256() {
-        $expected = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJQUzI1NiJ9.eyJmb28iOiJiYXIifQ.jukVdy99ZcyKvnkeeZ96c9J8c8FhyAO1ElSn6qHYzxTOjUXWxaaOU_5PZBA-_Bl7SUiLUGS4zv_C2IuH6ZN70MO2omWTcCV544Z2ZesMGsm5ll3kdPeaqtaj1IafDujDRmAJHpUoH2F3GXRAcSmVtj8c9VwJocVdeS-L43wa7uaymT330GRyKajWh8huwMZdgSVJemxct4Y-N2saDvLiVDQwjDWjxNP_eaAh-VFf6sIsK-BRcSRJr-GhwqGcpsvkE7OGbissYlB0fvl6MgxP_fic8ka84SQzX7WcM_zuEgI_J6O4CGPG21lQhJp-Fmme_a7RVDmu0F2kg3cGk81nYA';
+        $expected = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJQUzI1NiJ9.eyJmb28iOiJiYXIifQ.x5S_So_vmBcuROQ1uqlZTCc5YWk9xMR4SyCrVwxylgewFVK-WIsiDyMvSuBeojNXk693f775HeO1h8VJIkuXN3wupPKn2OHFPvQMPdcygLxM7aGV8gG9Ocv-HHWAK_i3UQpek-2CjEDSGFBUQqvKKxqx7NrbB-xt4dBn6JeMEs5wqpADUDQWr5zC33OEwamZktPF10FS2HVRtLuS4X9J53x2kLIFxxqPq_pyvUvlfehniyzupyVMbhHPe9-kiibLVSN0dVX9w0UyNoNQ1ZxWXfMZ3gVsWIeaaXCseW8TD7Pm_7I6Y8_sALje08USJ4Sdj4ExpvJqqrnY2cCHIAGAQA';
         $jws = new JOSE_JWS($this->plain_jwt);
         $jws = $jws->sign($this->rsa_keys['private'], 'PS256');
         # NOTE: RSA-PSS generates different signature each time
@@ -66,7 +66,7 @@ class JOSE_JWS_Test extends JOSE_TestCase {
     }
 
     function testSignPS384() {
-        $expected = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJQUzM4NCJ9.eyJmb28iOiJiYXIifQ.LLtxr-Np3CrTn5mjwftJL6kiPQ4tTnD2C045Vde3g6Y2OX3dYz8YOLINBaC3eM2A9n6YrB9upkGi4lB2zRUCWbdt5-qf9z8M59Wq-EcJdfmhy7bGhc3Kjejpn5IXON3NdnZo8rbRqUntuVyL-aBbQrN42-5wHLGlenwF4nv_GSAj7HYYrwsCEdPxU-cc_hF3_llAxuROARLDJmKGmuKUnZyYvKg2nxwOM2TAWpeRYdVwXv9d5QD61ieS0sxuK8pEiShENRFgRjMoZDAf3TXNO84HAIURuynNH_fD6o-ltmjcfiCzR67Jf0F863vpVzOGkzAs2HxiI2I5XmP_rXAgEg';
+        $expected = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJQUzM4NCJ9.eyJmb28iOiJiYXIifQ.vvJPhzH_aZiiFaaAPOfshgaRmiqRSmyUmvL02uZGyWNtjJuA_zEJsuvs18JzOkDgHCG5MsrfhWkJKsl9Pm2DLWo2D7b8NBKpHE1oedTptOOnk8wGWUU2vBXYmuoWcKzDrH0Bl697NTTNv72AeoMWzaOXqYTx_qcOZxlscGINm0-lqttSk-gnzqbOxSAacv_YeibofxvFNw3Q3eaP36f1glYOWHOQSSWoqe0cW0F8hxcLeEr4FPRwAaFnOfG0wDsYZ8huvEun4uopEitJugC8oYiE-iax-QbbwboIiYeZtDBG51uydkOEjKi3WexFjayiQSCgj_343mUdq1wzV9dt2w';
         $jws = new JOSE_JWS($this->plain_jwt);
         $jws = $jws->sign($this->rsa_keys['private'], 'PS384');
         # NOTE: RSA-PSS generates different signature each time
@@ -77,7 +77,7 @@ class JOSE_JWS_Test extends JOSE_TestCase {
     }
 
     function testSignPS512() {
-        $expected = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJQUzUxMiJ9.eyJmb28iOiJiYXIifQ.UA7Wl5HKZEgrZgvVBC3f-hAvs9qdStGAXLz_FIbK38wScksxcZXdFVvnlwJTJ4YmMA64gmRUKz1-jx2XaodcFknAEvUsNtxJqMLgl19ZIOHo7Mb_9JeL1rjVu2IBwgmbpMaUap14QZFKvEeXVm0IV4a8ue8fjAtZKWCslRkCPOWoVqZB5UwnN4ErYEN4UzaxRpOqu161NobaOASgXFe_puwvct5pcHrxVcevziT-N4uwyiz1zpBoGxV17CU-gAq1lxIIUVKJKQPqspjvjYY0aq0PwhlLT1-da4rrqvwKV0cRA0ODSaLXu7y_axxDPGzevtIaBvdYpT5MBAN9Dxy8fw';
+        $expected = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJQUzUxMiJ9.eyJmb28iOiJiYXIifQ.g8x8IDQuG6-TMHowGvtFSurHrxccbP9ihmRIrwtccYxO1tkBSoU1Sgl8Cf5fj4u2E24vIQIc6feaTHIt--T2gdxvvSf2W0dhfP7GH4bajiOuL7lz2QcjypvxXdhoZM3PAGyWLYK76ZJ2RCalEvApZrWGsBud-h8Gnvd69wotm6hay8ZIbm7KEy0uuRnLF9r95uKxhMH5HVWQiPi4sw3FJgUlrBL4PeLTiRbrmVmCxuD-VTAZnxUZQkyrSwF0i4YPx9erptGQY6tndB6f_7oM8aDmj4xp3EjWIhOmJ4PfIZhBTeNpQW9eKto9Q2St_rruMlhrrFdaB7w8240pMKFkqw';
         $jws = new JOSE_JWS($this->plain_jwt);
         $jws = $jws->sign($this->rsa_keys['private'], 'PS512');
         # NOTE: RSA-PSS generates different signature each time
@@ -148,21 +148,21 @@ class JOSE_JWS_Test extends JOSE_TestCase {
     }
 
     function testVerifyPS256() {
-        $input = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJQUzI1NiJ9.eyJmb28iOiJiYXIifQ.jukVdy99ZcyKvnkeeZ96c9J8c8FhyAO1ElSn6qHYzxTOjUXWxaaOU_5PZBA-_Bl7SUiLUGS4zv_C2IuH6ZN70MO2omWTcCV544Z2ZesMGsm5ll3kdPeaqtaj1IafDujDRmAJHpUoH2F3GXRAcSmVtj8c9VwJocVdeS-L43wa7uaymT330GRyKajWh8huwMZdgSVJemxct4Y-N2saDvLiVDQwjDWjxNP_eaAh-VFf6sIsK-BRcSRJr-GhwqGcpsvkE7OGbissYlB0fvl6MgxP_fic8ka84SQzX7WcM_zuEgI_J6O4CGPG21lQhJp-Fmme_a7RVDmu0F2kg3cGk81nYA';
+        $input = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJQUzI1NiJ9.eyJmb28iOiJiYXIifQ.x5S_So_vmBcuROQ1uqlZTCc5YWk9xMR4SyCrVwxylgewFVK-WIsiDyMvSuBeojNXk693f775HeO1h8VJIkuXN3wupPKn2OHFPvQMPdcygLxM7aGV8gG9Ocv-HHWAK_i3UQpek-2CjEDSGFBUQqvKKxqx7NrbB-xt4dBn6JeMEs5wqpADUDQWr5zC33OEwamZktPF10FS2HVRtLuS4X9J53x2kLIFxxqPq_pyvUvlfehniyzupyVMbhHPe9-kiibLVSN0dVX9w0UyNoNQ1ZxWXfMZ3gVsWIeaaXCseW8TD7Pm_7I6Y8_sALje08USJ4Sdj4ExpvJqqrnY2cCHIAGAQA';
         $jwt = JOSE_JWT::decode($input);
         $jws = new JOSE_JWS($jwt);
         $this->assertInstanceOf('JOSE_JWS', $jws->verify($this->rsa_keys['public']));
     }
 
     function testVerifyPS384() {
-        $input = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJQUzM4NCJ9.eyJmb28iOiJiYXIifQ.LLtxr-Np3CrTn5mjwftJL6kiPQ4tTnD2C045Vde3g6Y2OX3dYz8YOLINBaC3eM2A9n6YrB9upkGi4lB2zRUCWbdt5-qf9z8M59Wq-EcJdfmhy7bGhc3Kjejpn5IXON3NdnZo8rbRqUntuVyL-aBbQrN42-5wHLGlenwF4nv_GSAj7HYYrwsCEdPxU-cc_hF3_llAxuROARLDJmKGmuKUnZyYvKg2nxwOM2TAWpeRYdVwXv9d5QD61ieS0sxuK8pEiShENRFgRjMoZDAf3TXNO84HAIURuynNH_fD6o-ltmjcfiCzR67Jf0F863vpVzOGkzAs2HxiI2I5XmP_rXAgEg';
+        $input = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJQUzM4NCJ9.eyJmb28iOiJiYXIifQ.vvJPhzH_aZiiFaaAPOfshgaRmiqRSmyUmvL02uZGyWNtjJuA_zEJsuvs18JzOkDgHCG5MsrfhWkJKsl9Pm2DLWo2D7b8NBKpHE1oedTptOOnk8wGWUU2vBXYmuoWcKzDrH0Bl697NTTNv72AeoMWzaOXqYTx_qcOZxlscGINm0-lqttSk-gnzqbOxSAacv_YeibofxvFNw3Q3eaP36f1glYOWHOQSSWoqe0cW0F8hxcLeEr4FPRwAaFnOfG0wDsYZ8huvEun4uopEitJugC8oYiE-iax-QbbwboIiYeZtDBG51uydkOEjKi3WexFjayiQSCgj_343mUdq1wzV9dt2w';
         $jwt = JOSE_JWT::decode($input);
         $jws = new JOSE_JWS($jwt);
         $this->assertInstanceOf('JOSE_JWS', $jws->verify($this->rsa_keys['public']));
     }
 
     function testVerifyPS512() {
-        $input = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJQUzUxMiJ9.eyJmb28iOiJiYXIifQ.UA7Wl5HKZEgrZgvVBC3f-hAvs9qdStGAXLz_FIbK38wScksxcZXdFVvnlwJTJ4YmMA64gmRUKz1-jx2XaodcFknAEvUsNtxJqMLgl19ZIOHo7Mb_9JeL1rjVu2IBwgmbpMaUap14QZFKvEeXVm0IV4a8ue8fjAtZKWCslRkCPOWoVqZB5UwnN4ErYEN4UzaxRpOqu161NobaOASgXFe_puwvct5pcHrxVcevziT-N4uwyiz1zpBoGxV17CU-gAq1lxIIUVKJKQPqspjvjYY0aq0PwhlLT1-da4rrqvwKV0cRA0ODSaLXu7y_axxDPGzevtIaBvdYpT5MBAN9Dxy8fw';
+        $input = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJQUzUxMiJ9.eyJmb28iOiJiYXIifQ.g8x8IDQuG6-TMHowGvtFSurHrxccbP9ihmRIrwtccYxO1tkBSoU1Sgl8Cf5fj4u2E24vIQIc6feaTHIt--T2gdxvvSf2W0dhfP7GH4bajiOuL7lz2QcjypvxXdhoZM3PAGyWLYK76ZJ2RCalEvApZrWGsBud-h8Gnvd69wotm6hay8ZIbm7KEy0uuRnLF9r95uKxhMH5HVWQiPi4sw3FJgUlrBL4PeLTiRbrmVmCxuD-VTAZnxUZQkyrSwF0i4YPx9erptGQY6tndB6f_7oM8aDmj4xp3EjWIhOmJ4PfIZhBTeNpQW9eKto9Q2St_rruMlhrrFdaB7w8240pMKFkqw';
         $jwt = JOSE_JWT::decode($input);
         $jws = new JOSE_JWS($jwt);
         $this->assertInstanceOf('JOSE_JWS', $jws->verify($this->rsa_keys['public']));
