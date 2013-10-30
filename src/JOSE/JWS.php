@@ -31,6 +31,7 @@ class JOSE_JWS extends JOSE_JWT {
         $rsa = new Crypt_RSA();
         $rsa->loadKey($public_or_private_key);
         $rsa->setHash($this->digest());
+        $rsa->setMGFHash($this->digest());
         $rsa->setSignatureMode($padding_mode);
         return $rsa;
     }
