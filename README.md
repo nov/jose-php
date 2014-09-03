@@ -62,6 +62,24 @@ not supported yet
     php composer.phar install --dev
     ./vendor/bin/phpunit -c test/phpunit.xml --tap
 
+### JWK
+Json Web Key
+
+    $jwt = JOSE_JWT::decode($jwt_string);
+    if (array_key_exists('jku', $jwt->header)) {
+        
+        /*get back the content of the jku URL*/
+        $jwkSetJsonObject = json_decode(file_get_content($jwt->header['jku']));
+
+        $jwkSet = new \JOSE_JWKSet();
+        $jwkSet->setJwksFromJsonObject($jwkSetJsonObject);
+
+        $jws = new \JOSE_JWS($jwt);
+        $jws->verify($jwkSet);
+    }
+        
+
+
 ## Copyright
 
 Copyright &copy; 2013 GREE Inc. See LICENSE for details.
