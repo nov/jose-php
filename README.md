@@ -19,7 +19,8 @@ http://phpseclib.sourceforge.net
 $jwt = new JOSE_JWT(array(
     'foo' => 'bar'
 ));
-$jwt->toString();```
+$jwt->toString();
+```
 
 #### Decoding
 ```php
