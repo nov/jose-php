@@ -41,6 +41,13 @@ class JOSE_JWKMaker
      */
     protected $pass_phrase;
 
+    /**
+     * 
+     * @param string $file_rsa_key
+     * @param string $kid
+     * @param string $use
+     * @param string $pass_phrase
+     */
     public function __construct($file_rsa_key, $kid = null, $use = null, $pass_phrase = null)
     {
         $this->file_rsa_key = $file_rsa_key;
