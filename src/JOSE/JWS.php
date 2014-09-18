@@ -49,8 +49,8 @@ class JOSE_JWS extends JOSE_JWT
         
         $alg = ($jwk->alg !== null) ? $jwk->alg : $this->digest();
 
-        $modulus = new \Math_BigInteger('0x' . bin2hex(JOSE_URLSafeBase64::decode($jwk->n)), 16);
-        $exponent = new \Math_BigInteger('0x' . bin2hex(JOSE_URLSafeBase64::decode($jwk->e)), 16);
+        $modulus = new Math_BigInteger('0x' . bin2hex(JOSE_URLSafeBase64::decode($jwk->n)), 16);
+        $exponent = new Math_BigInteger('0x' . bin2hex(JOSE_URLSafeBase64::decode($jwk->e)), 16);
         $rsa = new Crypt_RSA();
         $rsa->setSignatureMode($padding_mode);
         $rsa->setHash($alg);
