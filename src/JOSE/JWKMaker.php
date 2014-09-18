@@ -59,11 +59,11 @@ class JOSE_JWKMaker
     public function makeJwkContent()
     {
         if(!is_file($this->file_rsa_key)) {
-            throw new \InvalidArgumentException(sprintf("the file %s is a file", $this->file_rsa_key) );
+            throw new InvalidArgumentException(sprintf("the file %s is a file", $this->file_rsa_key) );
         }
         
         if(!is_readable($this->file_rsa_key)){
-            throw new \InvalidArgumentException(sprintf("the file %s is not readable", $this->file_rsa_key) );
+            throw new InvalidArgumentException(sprintf("the file %s is not readable", $this->file_rsa_key) );
         }
         
         $cert = file_get_contents($this->file_rsa_key);
@@ -71,7 +71,7 @@ class JOSE_JWKMaker
         $key_pattern = '/(?m)^-----BEGIN (CERTIFICATE|PUBLIC KEY|RSA PRIVATE KEY)-----$\n((?s).*)\n^-----END (CERTIFICATE|PUBLIC KEY|RSA PRIVATE KEY)-----$/';  // matches whole block,
 
         if (!preg_match($key_pattern, $cert, $matches)) {
-            throw new \InvalidArgumentException(sprintf("the file %s is not a valid certificate", $this->file_rsa_key) );
+            throw new InvalidArgumentException(sprintf("the file %s is not a valid certificate", $this->file_rsa_key) );
         }
         
         $jwk_keys = array();
@@ -160,7 +160,7 @@ class JOSE_JWKMaker
         if ($is_private_key) {
             $rsa->setPassword($pass_phrase);
             if (!$rsa->loadkey($key_contents, CRYPT_RSA_PRIVATE_FORMAT_PKCS1)) {
-                throw new \InvalidArgumentException(sprintf("failed to load key", $this->file_rsa_key) );
+                throw new InvalidArgumentException(sprintf("failed to load key", $this->file_rsa_key) );
             }
         } else {
             $details = openssl_pkey_get_details($key);

@@ -70,7 +70,7 @@ class JOSE_JWKMakerTest extends JOSE_TestCase {
     
     /**
      * @expectedException InvalidArgumentException
-     * @expectedExceptionMessage the file /home/nyu/www/OIC-P/vendor/gree/jose/test/JOSE/../fixtures/google.jwt is not a valid certificate
+     * @expectedExceptionMessage test/JOSE/../fixtures/google.jwt is not a valid certificate
      */
     public function testSouldFailAtLoadingWrongCert()
     {
