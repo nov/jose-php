@@ -94,43 +94,12 @@ class JOSE_JWS extends JOSE_JWT
         }
     }
     
-    private function getPrivateKeyOrSecret($private_key_or_secret)
-    {
-        if($private_key_or_secret instanceof JOSE_JWKSet) {
-            
-            switch ($this->header['alg']) {
-                case 'HS256':
-                case 'HS384':
-                case 'HS512':
-                    return $private_key_or_secret->filterJwk("use", JOSE_JWK::JWK_USE_SIG, true)->kid;
-                case 'RS256':
-                case 'RS384':
-                case 'RS512':
-                    return $private_key_or_secret;
-                case 'ES256':
-                case 'ES384':
-                case 'ES512':
-                    throw new JOSE_Exception_UnexpectedAlgorithm('Algorithm not supported');
-                case 'PS256':
-                case 'PS384':
-                case 'PS512':
-                    return $private_key_or_secret;
-                default:
-                    throw new JOSE_Exception_UnexpectedAlgorithm('Unknown algorithm');
-            }
-        }
-        
-        return $private_key_or_secret;
-    }
-
     private function _sign($private_key_or_secret)
     {
         $signature_base_string = implode('.', array(
             $this->compact((object) $this->header),
             $this->compact((object) $this->claims)
         ));
-        
-        $private_key_or_secret = $this->getPrivateKeyOrSecret($private_key_or_secret);
         
         switch ($this->header['alg']) {
             case 'HS256':
