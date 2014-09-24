@@ -29,11 +29,11 @@ class JOSE_JWKSet_Test extends JOSE_TestCase {
         $jwks = new JOSE_JWKSet();
         $jwks->setJwksFromJsonObject($jsonObject);
         
-        $this->assertCount(2, $jwks->filtreJwk("use", JOSE_JWK::JWK_USE_SIG));
-        $this->assertNotNull($jwks->filtreJwk("use", JOSE_JWK::JWK_USE_ENG));
-        $this->assertFalse(is_array($jwks->filtreJwk("use", JOSE_JWK::JWK_USE_ENG)));
-        $this->assertInstanceOf("JOSE_JWK", $jwks->filtreJwk("use", JOSE_JWK::JWK_USE_ENG));
-        $this->assertInstanceOf("JOSE_JWK", $jwks->filtreJwk("use", JOSE_JWK::JWK_USE_SIG, true));
+        $this->assertCount(2, $jwks->filterJwk("use", JOSE_JWK::JWK_USE_SIG));
+        $this->assertNotNull($jwks->filterJwk("use", JOSE_JWK::JWK_USE_ENG));
+        $this->assertFalse(is_array($jwks->filterJwk("use", JOSE_JWK::JWK_USE_ENG)));
+        $this->assertInstanceOf("JOSE_JWK", $jwks->filterJwk("use", JOSE_JWK::JWK_USE_ENG));
+        $this->assertInstanceOf("JOSE_JWK", $jwks->filterJwk("use", JOSE_JWK::JWK_USE_SIG, true));
     }
 
 }
