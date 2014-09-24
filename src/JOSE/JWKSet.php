@@ -51,7 +51,7 @@ class JOSE_JWKSet
      * @param string $value a value
      * @param boolean $unique return a unique result or many
      */
-    public function filtreJwk($property, $value, $unique = false)
+    public function filterJwk($property, $value, $unique = false)
     {
         $out = array();
         foreach($this->jwks as $jwk) {

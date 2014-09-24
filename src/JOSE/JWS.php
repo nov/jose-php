@@ -45,7 +45,7 @@ class JOSE_JWS extends JOSE_JWT
     
     private function rsaJwk($jwkSet, $padding_mode)
     {
-        $jwk = $jwkSet->filtreJwk("use", JOSE_JWK::JWK_USE_SIG, true);
+        $jwk = $jwkSet->filterJwk("use", JOSE_JWK::JWK_USE_SIG, true);
         
         $alg = ($jwk->alg !== null) ? $jwk->alg : $this->digest();
 
@@ -102,7 +102,7 @@ class JOSE_JWS extends JOSE_JWT
                 case 'HS256':
                 case 'HS384':
                 case 'HS512':
-                    return $private_key_or_secret->filtreJwk("use", JOSE_JWK::JWK_USE_SIG, true)->kid;
+                    return $private_key_or_secret->filterJwk("use", JOSE_JWK::JWK_USE_SIG, true)->kid;
                 case 'RS256':
                 case 'RS384':
                 case 'RS512':
