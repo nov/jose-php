@@ -55,14 +55,18 @@ $jws->verify($public_key);
 
 #### Encryption
 
-not supported yet
+```php
+$jwe = new JOSE_JWE($plain_text);
+$jwe->encrypt(file_get_contents('/path/to/public_key.pem'));
+$jwe->toString();
+```
 
 #### Decryption
 
 ```php
 $jwt_string = 'eyJ...';
-$jwt = JOSE_JWT::decode($jwt_string);
-$jwt->decrypt($private_key);
+$jwe = JOSE_JWT::decode($jwt_string);
+$jwe->decrypt($private_key);
 ```
 
 ## Run Test
