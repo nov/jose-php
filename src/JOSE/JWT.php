@@ -5,6 +5,8 @@ require_once 'Crypt/AES.php';
 require_once dirname(__FILE__) . '/Exception.php';
 require_once dirname(__FILE__) . '/JWS.php';
 require_once dirname(__FILE__) . '/JWE.php';
+require_once dirname(__FILE__) . '/JWK.php';
+require_once dirname(__FILE__) . '/JWKSet.php';
 require_once dirname(__FILE__) . '/URLSafeBase64.php';
 
 class JOSE_JWT {

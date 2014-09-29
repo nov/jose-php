@@ -9,7 +9,6 @@ class JOSE_JWS_Test extends JOSE_TestCase {
         $this->plain_jwt = new JOSE_JWT(array(
             'foo' => 'bar'
         ));
-
     }
 
     function testSignHS256() {
