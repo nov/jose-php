@@ -17,7 +17,7 @@ class JOSE_JWK {
                 $n = new Math_BigInteger('0x' . bin2hex(JOSE_URLSafeBase64::decode($this->components['n'])), 16);
                 $e = new Math_BigInteger('0x' . bin2hex(JOSE_URLSafeBase64::decode($this->components['e'])), 16);
                 if (array_key_exists('d', $this->components)) {
-                    throw new JOSE_Exception_InvalidFormat('RSA private key isn\'t supported');
+                    throw new JOSE_Exception_UnexpectedAlgorithm('RSA private key isn\'t supported');
                 } else {
                     $pem_string = $rsa->_convertPublicKey($n, $e);
                 }
