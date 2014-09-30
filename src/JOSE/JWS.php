@@ -28,8 +28,14 @@ class JOSE_JWS extends JOSE_JWT {
     }
 
     private function rsa($public_or_private_key, $padding_mode) {
-        $rsa = new Crypt_RSA();
-        $rsa->loadKey($public_or_private_key);
+        if ($public_or_private_key instanceof JOSE_JWK) {
+            $rsa = $public_or_private_key->toKey();
+        } else if ($public_or_private_key instanceof Crypt_RSA) {
+            $rsa = $public_or_private_key;
+        } else {
+            $rsa = new Crypt_RSA();
+            $rsa->loadKey($public_or_private_key);
+        }
         $rsa->setHash($this->digest());
         $rsa->setMGFHash($this->digest());
         $rsa->setSignatureMode($padding_mode);
