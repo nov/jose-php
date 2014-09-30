@@ -69,6 +69,45 @@ $jwe = JOSE_JWT::decode($jwt_string);
 $jwe->decrypt($private_key);
 ```
 
+### JWK
+
+#### Encode
+
+##### RSA Public Key
+
+```php
+$public_key = new Crypt_RSA();
+$public_key->loadKey('-----BEGIN RSA PUBLIC KEY-----\n...');
+JOSE_JWK::encode($public_key); # => JOSE_JWK instance
+```
+
+##### RSA Private Key
+
+```php
+$private_key = new Crypt_RSA();
+$private_key->setPassword($pass_phrase); # skip if not encrypted
+$private_key->loadKey('-----BEGIN RSA PRIVATE KEY-----\n...');
+JOSE_JWK::encode($private_key); # => JOSE_JWK instance
+```
+
+#### Decode
+
+##### RSA Public Key
+
+```php
+# public key
+$components = array(
+    'kty' => 'RSA',
+    'e' => 'AQAB',
+    'n' => 'x9vNhcvSrxjsegZAAo4OEuo...'
+);
+JOSE_JWK::decode($components); # => Crypt_RSA instance
+```
+
+##### RSA Private Key
+
+Not supported.
+
 ## Run Test
 
 ```bash

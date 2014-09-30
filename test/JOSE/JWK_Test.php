@@ -12,7 +12,7 @@ class JOSE_JWK_Test extends JOSE_TestCase {
     }
 
     function testEncodeRSAPublicKey() {
-        $rsa = new Crypt_RSA;
+        $rsa = new Crypt_RSA();
         $rsa->loadKey($this->rsa_keys['public']);
         $jwk = JOSE_JWK::encode($rsa);
         $this->assertInstanceOf('JOSE_JWK', $jwk);
@@ -22,7 +22,7 @@ class JOSE_JWK_Test extends JOSE_TestCase {
     }
 
     function testEncodeRSAPrivateKey() {
-        $rsa = new Crypt_RSA;
+        $rsa = new Crypt_RSA();
         $rsa->loadKey($this->rsa_keys['private']);
         $jwk = JOSE_JWK::encode($rsa);
         $this->assertInstanceOf('JOSE_JWK', $jwk);
@@ -32,7 +32,7 @@ class JOSE_JWK_Test extends JOSE_TestCase {
     }
 
     function testEncodeWithExtraComponents() {
-        $rsa = new Crypt_RSA;
+        $rsa = new Crypt_RSA();
         $rsa->loadKey($this->rsa_keys['private']);
         $jwk = JOSE_JWK::encode($rsa, array(
             'kid' => '12345',

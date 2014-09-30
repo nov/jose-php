@@ -101,9 +101,7 @@ class JOSE_JWT_Test extends JOSE_TestCase {
             'foo' => 'bar'
         ));
         $jwe = $jwt->encrypt($this->rsa_keys['public']);
-
-        // 'instanceof' in PHP is actually 'is_a?' in Ruby, not 'instance_of?'
-        $this->assertEquals('JOSE_JWT', get_class($jwt));
-        $this->assertEquals('JOSE_JWE', get_class($jwe));
+        $this->assertInstanceOf('JOSE_JWT', $jwt);
+        $this->assertInstanceOf('JOSE_JWE', $jwe);
     }
 }
