@@ -41,6 +41,8 @@ $jwt = new JOSE_JWT(array(
 $jws = $jwt->sign($private_key, 'RS256');
 ```
 
+NOTE: `$private_key` can be `Crypt_RSA` instance.
+
 #### Verification
 
 ```php
@@ -50,6 +52,8 @@ $jwt = JOSE_JWT::decode($jwt_string);
 $jws = new JOSE_JWS($jwt);
 $jws->verify($public_key);
 ```
+
+NOTE: `$public_key` can be `JOSE_JWK` or `Crypt_RSA` instance.
 
 ### JWE
 
