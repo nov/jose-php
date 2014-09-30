@@ -4,7 +4,28 @@ class JOSE_JWK {
     var $components = array();
 
     function __construct($components = array()) {
+        if (!array_key_exists('kty', $components)) {
+            throw new JOSE_Exception_InvalidFormat('"kty" is required');
+        }
         $this->components = $components;
+    }
+
+    function toKey() {
+        switch ($this->components['kty']) {
+            case 'RSA':
+                $rsa = new Crypt_RSA();
+                $n = new Math_BigInteger('0x' . bin2hex(JOSE_URLSafeBase64::decode($this->components['n'])), 16);
+                $e = new Math_BigInteger('0x' . bin2hex(JOSE_URLSafeBase64::decode($this->components['e'])), 16);
+                if (array_key_exists('d', $this->components)) {
+                    throw new JOSE_Exception_InvalidFormat('RSA private key isn\'t supported');
+                } else {
+                    $pem_string = $rsa->_convertPublicKey($n, $e);
+                }
+                $rsa->loadKey($pem_string);
+                return $rsa;
+            default:
+                throw new JOSE_Exception_UnexpectedAlgorithm('Unknown key type');
+        }
     }
 
     function toString() {
@@ -31,6 +52,7 @@ class JOSE_JWK {
     }
 
     static function decode($components) {
-        throw new JOSE_Exception_UnexpectedAlgorithm('Not implemented yet');
+        $jwk = new self($components);
+        return $jwk->toKey();
     }
 }

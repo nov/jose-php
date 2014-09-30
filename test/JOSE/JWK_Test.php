@@ -1,6 +1,16 @@
 <?php
 
 class JOSE_JWK_Test extends JOSE_TestCase {
+    function testConstructWithoutKTY() {
+        $this->setExpectedException('JOSE_Exception_InvalidFormat');
+        new JOSE_JWK(array('n' => 'n'));
+    }
+
+    function testToString() {
+        $jwk = new JOSE_JWK(array('kty' => 'RSA', 'e' => 'e', 'n' => 'n'));
+        $this->assertEquals('{"kty":"RSA","e":"e","n":"n"}', $jwk->toString());
+    }
+
     function testEncodeRSAPublicKey() {
         $rsa = new Crypt_RSA;
         $rsa->loadKey($this->rsa_keys['public']);
@@ -30,5 +40,25 @@ class JOSE_JWK_Test extends JOSE_TestCase {
         ));
         $this->assertEquals('12345', $jwk->components['kid']);
         $this->assertEquals('sig', $jwk->components['use']);
+    }
+
+    function testEncodeWithUnexpectedAlg() {
+        $key = new Crypt_RC2();
+        $this->setExpectedException('JOSE_Exception_UnexpectedAlgorithm');
+        JOSE_JWK::encode($key);
+    }
+
+    function testDecode() {
+        $components = array(
+            'kty' => 'RSA',
+            'e' => 'AQAB',
+            'n' => 'x9vNhcvSrxjsegZAAo4OEuoZOV_oxINEeWneJYczS80_bQ1J6lSSJ81qecxXAzCLPlvsFoP4eeUNXSt_G7hP7SAM479N-kY_MzbihJ5LRY9sRzLbQTMeqsmDAmmQe4y3Ke3bvd70r8VOmo5pqM3IPLGwBkTRTQmyRsDQArilg6WtxDUgy5ol2STHFA8E1iCReh9bck8ZaLxzVhYRXZ0nuOKWGRMppocPlp55HVohOItUZh7uSCchLcVAZuhTTNaDLtLIJ6G0yNJvfEieJUhA8wGBoPhD3LMQwQMxTMerpjZhP_qjm6GgeWpKf-iVil86_PSy_z0Vw06_rD0sfXPtlQ'
+        );
+        $key = JOSE_JWK::decode($components);
+        $this->assertInstanceOf('Crypt_RSA', $key);
+        $this->assertEquals(
+            preg_replace("/\r\n|\r|\n/", '', $this->rsa_keys['public']),
+            preg_replace("/\r\n|\r|\n/", '', $key->getPublicKey(CRYPT_RSA_PUBLIC_FORMAT_PKCS1_RAW))
+        );
     }
 }
