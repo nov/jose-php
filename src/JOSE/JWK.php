@@ -1,7 +1,29 @@
 <?php
 
-class JOSE_JWK {
-    var $components = array();
+/**
+ * JWK
+ * 
+ * Properties defined in specification :
+ *  - kty :     string, Key Type
+ *  - use :     string, sig|enc|[other] Public Key Use
+ *  - key_ops : string, Key Operations
+ *  - alg :     string, Algorithm
+ *  - kid :     string, Key ID
+ *  - x5u :     string, X.509 URL
+ *  - x5c :     string, X.509 Certificate Chain
+ *  - x5t :     string, X.509 Certificate SHA-1 Thumbprint
+ *  - x5t#S256 : string, X.509 Certificate SHA-256 Thumbprint
+ *  - n :       string, to use when kty = RSA
+ *  - e :       string, to use when kty = RSA
+ *
+ * @see https://tools.ietf.org/html/draft-ietf-jose-json-web-key-31
+ */
+class JOSE_JWK
+{
+    const JWK_USE_SIG = "sig";
+    const JWK_USE_ENG = "enc";
+
+    public $components = array();
 
     function __construct($components = array()) {
         if (!array_key_exists('kty', $components)) {
@@ -56,3 +78,4 @@ class JOSE_JWK {
         return $jwk->toKey();
     }
 }
+

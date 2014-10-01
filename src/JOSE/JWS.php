@@ -2,15 +2,19 @@
 
 require_once dirname(__FILE__) . '/JWT.php';
 
-class JOSE_JWS extends JOSE_JWT {
-    function __construct($jwt) {
+class JOSE_JWS extends JOSE_JWT
+{
+
+    function __construct($jwt)
+    {
         $this->header = $jwt->header;
         $this->claims = $jwt->claims;
         $this->signature = $jwt->signature;
         $this->raw = $jwt->raw;
     }
 
-    function sign($private_key_or_secret, $algorithm = 'HS256') {
+    function sign($private_key_or_secret, $algorithm = 'HS256')
+    {
         $this->header['alg'] = $algorithm;
         $this->signature = $this->_sign($private_key_or_secret);
         if (!$this->signature) {
@@ -19,15 +23,17 @@ class JOSE_JWS extends JOSE_JWT {
         return $this;
     }
 
-    function verify($public_key_or_secret) {
+    function verify($public_key_or_secret)
+    {
         if ($this->_verify($public_key_or_secret)) {
             return $this;
-        } else {
-            throw new JOSE_Exception_VerificationFailed('Signature verification failed');
         }
+
+        throw new JOSE_Exception_VerificationFailed('Signature verification failed');
     }
 
-    private function rsa($public_or_private_key, $padding_mode) {
+    private function rsa($public_or_private_key, $padding_mode)
+    {
         if ($public_or_private_key instanceof JOSE_JWK) {
             $rsa = $public_or_private_key->toKey();
         } else if ($public_or_private_key instanceof Crypt_RSA) {
@@ -42,7 +48,8 @@ class JOSE_JWS extends JOSE_JWT {
         return $rsa;
     }
 
-    private function digest() {
+    private function digest()
+    {
         switch ($this->header['alg']) {
             case 'HS256':
             case 'RS256':
@@ -64,11 +71,13 @@ class JOSE_JWS extends JOSE_JWT {
         }
     }
 
-    private function _sign($private_key_or_secret) {
+    private function _sign($private_key_or_secret)
+    {
         $signature_base_string = implode('.', array(
             $this->compact((object) $this->header),
             $this->compact((object) $this->claims)
         ));
+
         switch ($this->header['alg']) {
             case 'HS256':
             case 'HS384':
@@ -91,7 +100,8 @@ class JOSE_JWS extends JOSE_JWT {
         }
     }
 
-    private function _verify($public_key_or_secret) {
+    private function _verify($public_key_or_secret)
+    {
         $segments = explode('.', $this->raw);
         $signature_base_string = implode('.', array($segments[0], $segments[1]));
         switch ($this->header['alg']) {
@@ -115,4 +125,5 @@ class JOSE_JWS extends JOSE_JWT {
                 throw new JOSE_Exception_UnexpectedAlgorithm('Unknown algorithm');
         }
     }
+
 }

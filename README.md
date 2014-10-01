@@ -66,6 +66,19 @@ $jwe->toString();
 ```
 
 #### Decryption
+```php
+$jwt_string = 'eyJ...';
+$jwt = JOSE_JWT::decode($jwt_string);
+$jwt->decrypt($private_key);
+```
+
+### JWK file creation
+
+The JOSE_JWKMaker take the properties below: 
+ - $file_rsa_key (string) [REQUIRED], path to the private, public certificat
+ - $kid (string), 'kid' string
+ - $use (string), 'use' string, most of time 'use' is set with 'sig' or 'enc'
+ - $pass_phrase (string), the pass phrase of private certificate
 
 ```php
 $jwt_string = 'eyJ...';
