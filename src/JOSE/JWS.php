@@ -24,8 +24,8 @@ class JOSE_JWS extends JOSE_JWT
     }
 
     function verify($public_key_or_secret)
-    {        
-        if($this->_verify($public_key_or_secret)) {
+    {
+        if ($this->_verify($public_key_or_secret)) {
             return $this;
         }
 
@@ -34,37 +34,14 @@ class JOSE_JWS extends JOSE_JWT
 
     private function rsa($public_or_private_key, $padding_mode)
     {
-        if($public_or_private_key instanceof JOSE_JWKSet) {
-            
-          return $this->rsaJwk($public_or_private_key, $padding_mode);
-              
+        if ($public_or_private_key instanceof JOSE_JWK) {
+            $rsa = $public_or_private_key->toKey();
+        } else if ($public_or_private_key instanceof Crypt_RSA) {
+            $rsa = $public_or_private_key;
         } else {
-            return $this->rsaClassic($public_or_private_key, $padding_mode);
+            $rsa = new Crypt_RSA();
+            $rsa->loadKey($public_or_private_key);
         }
-    }
-    
-    private function rsaJwk($jwkSet, $padding_mode)
-    {
-        $jwk = $jwkSet->filterJwk("use", JOSE_JWK::JWK_USE_SIG, true);
-        
-        $alg = ($jwk->alg !== null) ? $jwk->alg : $this->digest();
-
-        $modulus = new Math_BigInteger('0x' . bin2hex(JOSE_URLSafeBase64::decode($jwk->n)), 16);
-        $exponent = new Math_BigInteger('0x' . bin2hex(JOSE_URLSafeBase64::decode($jwk->e)), 16);
-        $rsa = new Crypt_RSA();
-        $rsa->setSignatureMode($padding_mode);
-        $rsa->setHash($alg);
-        $rsa->modulus = $modulus;
-        $rsa->exponent = $exponent;
-        $rsa->publicExponent = $exponent;
-        $rsa->k = strlen($rsa->modulus->toBytes());
-        return $rsa;
-    }            
-    
-    private function rsaClassic($public_or_private_key, $padding_mode)
-    {
-        $rsa = new Crypt_RSA();
-        $rsa->loadKey($public_or_private_key);
         $rsa->setHash($this->digest());
         $rsa->setMGFHash($this->digest());
         $rsa->setSignatureMode($padding_mode);
@@ -93,14 +70,14 @@ class JOSE_JWS extends JOSE_JWT
                 throw new JOSE_Exception_UnexpectedAlgorithm('Unknown algorithm');
         }
     }
-    
+
     private function _sign($private_key_or_secret)
     {
         $signature_base_string = implode('.', array(
             $this->compact((object) $this->header),
             $this->compact((object) $this->claims)
         ));
-        
+
         switch ($this->header['alg']) {
             case 'HS256':
             case 'HS384':
@@ -148,4 +125,5 @@ class JOSE_JWS extends JOSE_JWT
                 throw new JOSE_Exception_UnexpectedAlgorithm('Unknown algorithm');
         }
     }
+
 }
