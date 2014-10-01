@@ -267,7 +267,7 @@ class JOSE_JWS_Test extends JOSE_TestCase
         
         $jwt = JOSE_JWT::decode($id_token_string);
         $jws = new JOSE_JWS($jwt);
-        $this->assertInstanceOf('JOSE_JWS', $jws->verify($jwks));
+        $this->assertInstanceOf('JOSE_JWS', $jws->verify($jwks->keys[0]));
     }
     
     function testFailVerifiWithJwkSet()
@@ -283,7 +283,7 @@ class JOSE_JWS_Test extends JOSE_TestCase
         $jws = new JOSE_JWS($jwt);
         
         try {
-            $jws->verify($jwks);
+            $jws->verify($jwks->keys[0]);
         } catch (Exception $e) {
             $this->assertEquals("Invalid signature", $e->getMessage());
         }

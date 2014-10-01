@@ -2,82 +2,28 @@
 
 /**
  * JWK
+ * 
+ * Properties defined in specification :
+ *  - kty :     string, Key Type
+ *  - use :     string, sig|enc|[other] Public Key Use
+ *  - key_ops : string, Key Operations
+ *  - alg :     string, Algorithm
+ *  - kid :     string, Key ID
+ *  - x5u :     string, X.509 URL
+ *  - x5c :     string, X.509 Certificate Chain
+ *  - x5t :     string, X.509 Certificate SHA-1 Thumbprint
+ *  - x5t#S256 : string, X.509 Certificate SHA-256 Thumbprint
+ *  - n :       string, to use when kty = RSA
+ *  - e :       string, to use when kty = RSA
  *
  * @see https://tools.ietf.org/html/draft-ietf-jose-json-web-key-31
- * @author valérian Girard <valerian.girard@educagri.fr>
  */
 class JOSE_JWK
 {
     const JWK_USE_SIG = "sig";
     const JWK_USE_ENG = "enc";
-    
-    /**
-     * @see https://tools.ietf.org/html/draft-ietf-jose-json-web-key-31#section-4.1
-     * @var string (Key Type)
-     */
-    public $kty;
-    
-    /**
-     * @see https://tools.ietf.org/html/draft-ietf-jose-json-web-key-31#section-4.2
-     * @var string (sig|enc|[other]) Public Key Use
-     */
-    public $use;
-    
-    /**
-     * @see https://tools.ietf.org/html/draft-ietf-jose-json-web-key-31#section-4.3
-     * @var string  Key Operations
-     */
-    public $key_ops;
-    
-    /**
-     * @see https://tools.ietf.org/html/draft-ietf-jose-json-web-key-31#section-4.4
-     * @var string Algorithm
-     */
-    public $alg;
-    
-    /**
-     * @see https://tools.ietf.org/html/draft-ietf-jose-json-web-key-31#section-4.5
-     * @var string Key ID
-     */
-    public $kid;
-    
-    /**
-     * @see https://tools.ietf.org/html/draft-ietf-jose-json-web-key-31#section-4.6
-     * @var string X.509 URL
-     */
-    public $x5u;
-    
-    /**
-     * @see https://tools.ietf.org/html/draft-ietf-jose-json-web-key-31#section-4.7
-     * @var string X.509 Certificate Chain
-     */
-    public $x5c;
-    
-    /**
-     * @see https://tools.ietf.org/html/draft-ietf-jose-json-web-key-31#section-4.8
-     * @var string X.509 Certificate SHA-1 Thumbprint
-     */
-    public $x5t;
-    
-    /**
-     * @see https://tools.ietf.org/html/draft-ietf-jose-json-web-key-31#section-4.9
-     * @var string X.509 Certificate SHA-256 Thumbprint
-     */
-    public $x5tS256;
 
-    /**
-     * Use when kty = RSA
-     * @var string 
-     */
-    public $n;
-    
-    /**
-     * Use when kty = RSA
-     * @var string 
-     */
-    public $e;
-
-    var $components = array();
+    public $components = array();
 
     function __construct($components = array()) {
         if (!array_key_exists('kty', $components)) {
