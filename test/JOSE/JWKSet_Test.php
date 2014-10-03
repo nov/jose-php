@@ -20,4 +20,14 @@ class JOSE_JWKSet_Test extends JOSE_TestCase {
         $jwks = new JOSE_JWKSet($key);
         $this->assertEquals('{"keys":[{"kty":"RSA","e":"AQAB","n":"x9vNhcvSrxjsegZAAo4OEuoZOV_oxINEeWneJYcz..."}]}', $jwks->toString());
     }
+
+    function test__toString() {
+        $key = array(
+            'kty' => 'RSA',
+            'e' => 'AQAB',
+            'n' => 'x9vNhcvSrxjsegZAAo4OEuoZOV_oxINEeWneJYcz...'
+        );
+        $jwks = new JOSE_JWKSet($key);
+        $this->assertEquals('{"keys":[{"kty":"RSA","e":"AQAB","n":"x9vNhcvSrxjsegZAAo4OEuoZOV_oxINEeWneJYcz..."}]}', sprintf('%s', $jwks));
+    }
 }
