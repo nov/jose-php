@@ -29,6 +29,9 @@ class JOSE_JWT {
             $this->compact($this->signature)
         ));
     }
+    function __toString() {
+        return $this->toString();
+    }
 
     function sign($private_key_or_secret, $algorithm = 'HS256') {
         $jws = $this->toJWS();

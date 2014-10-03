@@ -22,6 +22,16 @@ class JOSE_JWT_Test extends JOSE_TestCase {
         $this->assertEquals($expected, $jwt->toString());
     }
 
+    function test__toString() {
+        $expected = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJub25lIn0.eyJzdWIiOiJncmVlLXVpZC0xMjM0NSIsImlzcyI6Imh0dHBzOi8vZ3JlZS5uZXQiLCJhdWQiOiJncmVlLWFwcGlkLTEyMzQ1In0.';
+        $jwt = new JOSE_JWT(array(
+            'sub' => 'gree-uid-12345',
+            'iss' => 'https://gree.net',
+            'aud' => 'gree-appid-12345'
+        ));
+        $this->assertEquals($expected, sprintf('%s', $jwt));
+    }
+
     function testEncode() {
         $expected = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJub25lIn0.eyJzdWIiOiJncmVlLXVpZC0xMjM0NSIsImlzcyI6Imh0dHBzOi8vZ3JlZS5uZXQiLCJhdWQiOiJncmVlLWFwcGlkLTEyMzQ1In0.';
         $jwt = JOSE_JWT::encode(array(

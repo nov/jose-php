@@ -9,6 +9,20 @@ class JOSE_JWE_Test extends JOSE_TestCase {
         $this->plain_text = 'Hello World';
     }
 
+    function testToString() {
+        $jwe = new JOSE_JWE($this->plain_text);
+        $jwe->encrypt($this->rsa_keys['public']);
+        $segments = explode('.', $jwe->toString());
+        $this->assertEquals(5, count($segments));
+    }
+
+    function test__toString() {
+        $jwe = new JOSE_JWE($this->plain_text);
+        $jwe->encrypt($this->rsa_keys['public']);
+        $segments = explode('.', sprintf('%s', $jwe));
+        $this->assertEquals(5, count($segments));
+    }
+
     function testEncryptRSA15_A128CBCHS256() {
         $jwe = new JOSE_JWE($this->plain_text);
         $jwe->encrypt($this->rsa_keys['public']);

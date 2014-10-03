@@ -31,6 +31,9 @@ class JOSE_JWK {
     function toString() {
         return json_encode($this->components);
     }
+    function __toString() {
+        return $this->toString();
+    }
 
     static function encode($key, $extra_components = array()) {
         switch(get_class($key)) {

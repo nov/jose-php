@@ -21,4 +21,7 @@ class JOSE_JWKSet {
         }
         return json_encode(array('keys' => $keys));
     }
+    function __toString() {
+        return $this->toString();
+    }
 }
