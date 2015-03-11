@@ -39,9 +39,9 @@ class JOSE_JWT {
         return $jws;
     }
 
-    function verify($public_key_or_secret) {
+    function verify($public_key_or_secret, $alg = null) {
         $jws = $this->toJWS();
-        $jws->verify($public_key_or_secret);
+        $jws->verify($public_key_or_secret, $alg);
         return $jws;
     }
 
