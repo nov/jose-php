@@ -50,7 +50,7 @@ $public_key = "-----BEGIN RSA PUBLIC KEY-----\n....";
 $jwt_string = 'eyJ...';
 $jwt = JOSE_JWT::decode($jwt_string);
 $jws = new JOSE_JWS($jwt);
-$jws->verify($public_key);
+$jws->verify($public_key, 'RS256');
 ```
 
 NOTE: `$public_key` can be `JOSE_JWK` or `Crypt_RSA` instance.
