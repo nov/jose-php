@@ -230,4 +230,26 @@ class JOSE_JWS_Test extends JOSE_TestCase {
         $jws = new JOSE_JWS($jwt);
         $this->assertInstanceOf('JOSE_JWS', $jws->verify($public_key));
     }
+
+    function testVerifyMalformedJWS_HS256_to_none() {
+        $malformed_jwt = JOSE_JWT::decode($this->plain_jwt->toString());
+        $this->setExpectedException('JOSE_Exception_UnexpectedAlgorithm');
+        $malformed_jwt->verify('secret');
+    }
+
+    function testVerifyMalformedJWS_RS256_to_HS256_without_explicit_alg() {
+        $malformed_jwt = JOSE_JWT::decode(
+            $this->plain_jwt->sign($this->rsa_keys['public'], 'HS256')->toString()
+        );
+        // NOTE: attacker succeeded to let you recieve malformed JWT in this case.
+        $malformed_jwt->verify($this->rsa_keys['public']);
+    }
+
+    function testVerifyMalformedJWS_RS256_to_HS256_with_explicit_alg() {
+        $malformed_jwt = JOSE_JWT::decode(
+            $this->plain_jwt->sign($this->rsa_keys['public'], 'HS256')->toString()
+        );
+        $this->setExpectedException('PHPUnit_Framework_Error_Notice', 'Invalid signature');
+        $malformed_jwt->verify($this->rsa_keys['public'], 'RS256');
+    }
 }

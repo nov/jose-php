@@ -19,8 +19,8 @@ class JOSE_JWS extends JOSE_JWT {
         return $this;
     }
 
-    function verify($public_key_or_secret) {
-        if ($this->_verify($public_key_or_secret)) {
+    function verify($public_key_or_secret, $alg = null) {
+        if ($this->_verify($public_key_or_secret, $alg)) {
             return $this;
         } else {
             throw new JOSE_Exception_VerificationFailed('Signature verification failed');
@@ -91,10 +91,14 @@ class JOSE_JWS extends JOSE_JWT {
         }
     }
 
-    private function _verify($public_key_or_secret) {
+    private function _verify($public_key_or_secret, $expected_alg = null) {
         $segments = explode('.', $this->raw);
         $signature_base_string = implode('.', array($segments[0], $segments[1]));
-        switch ($this->header['alg']) {
+        if (!$expected_alg) {
+            # NOTE: might better to warn here
+            $expected_alg = $this->header['alg'];
+        }
+        switch ($expected_alg) {
             case 'HS256':
             case 'HS384':
             case 'HS512':
