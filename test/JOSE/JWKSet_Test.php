@@ -35,6 +35,15 @@ class JOSE_JWKSet_Test extends JOSE_TestCase {
         $this->assertInstanceOf("JOSE_JWK", $jwks->filterJwk("use", JOSE_JWK::JWK_USE_ENG));
         $this->assertInstanceOf("JOSE_JWK", $jwks->filterJwk("use", JOSE_JWK::JWK_USE_SIG, true));
     }
+    
+    function testJwkFilterObjectNullResult() {
+        $jsonText = file_get_contents($this->fixture_dir . 'opfilter.jwk');
+        $jsonObject = json_decode($jsonText);
+        $jwks = new JOSE_JWKSet();
+        $jwks->setJwksFromJsonObject($jsonObject);
+        
+        $this->assertNull($jwks->filterJwk("use", "dumb"));
+    }
 
     function testJWKInput() {
         $key = new JOSE_JWK(array(

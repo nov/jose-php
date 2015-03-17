@@ -73,8 +73,10 @@ class JOSE_JWKSet
                 }
             }
         }
-        if (count($out) == 1 || $unique == true) {
-            return $out[0];
+        if (count($out) == 0) {
+            $out = null;
+        } elseif (count($out) == 1 || $unique == true) {
+            $out = $out[0];
         }
         return $out;
     }
