@@ -37,7 +37,7 @@ class JOSE_JWT {
     function toJson() {
         return json_encode(
    			   array(
-			         "header" => $this->compact((object) $this->header),
+			         "protected" => $this->compact((object) $this->header),
 			         "payload" => $this->compact((object) $this->claims),
 			         "signature" => $this->compact($this->signature)
 				 ));
