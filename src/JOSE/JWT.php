@@ -29,10 +29,20 @@ class JOSE_JWT {
             $this->compact($this->signature)
         ));
     }
+
     function __toString() {
         return $this->toString();
     }
 
+    function toJson() {
+        return json_encode(
+   			   array(
+			         "header" => $this->compact((object) $this->header),
+			         "payload" => $this->compact((object) $this->claims),
+			         "signature" => $this->compact($this->signature)
+				 ));
+    }
+    
     function sign($private_key_or_secret, $algorithm = 'HS256') {
         $jws = $this->toJWS();
         $jws->sign($private_key_or_secret, $algorithm);
