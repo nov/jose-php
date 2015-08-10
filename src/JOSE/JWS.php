@@ -38,6 +38,7 @@ class JOSE_JWS extends JOSE_JWT {
         }
         $rsa->setHash($this->digest());
         $rsa->setMGFHash($this->digest());
+        $rsa->setSaltLength(false); # NOTE: https://github.com/phpseclib/phpseclib/issues/768
         $rsa->setSignatureMode($padding_mode);
         return $rsa;
     }
