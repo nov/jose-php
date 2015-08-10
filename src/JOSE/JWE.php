@@ -54,7 +54,7 @@ class JOSE_JWE extends JOSE_JWT {
     }
 
     private function rsa($public_or_private_key, $padding_mode) {
-        $rsa = new Crypt_RSA();
+        $rsa = new phpseclib\Crypt\RSA();
         $rsa->loadKey($public_or_private_key);
         $rsa->setEncryptionMode($padding_mode);
         return $rsa;
@@ -67,7 +67,7 @@ class JOSE_JWE extends JOSE_JWT {
                 throw new JOSE_Exception_UnexpectedAlgorithm('Algorithm not supported');
             case 'A128CBC-HS256':
             case 'A256CBC-HS512':
-                $cipher = new Crypt_AES(CRYPT_AES_MODE_CBC);
+                $cipher = new phpseclib\CRYPT\AES(phpseclib\CRYPT\AES::MODE_CBC);
                 break;
             default:
                 throw new JOSE_Exception_UnexpectedAlgorithm('Unknown algorithm');
@@ -88,7 +88,7 @@ class JOSE_JWE extends JOSE_JWT {
     }
 
     private function generateRandomBytes($length) {
-        return crypt_random_string($length);
+        return phpseclib\Crypt\Random::string($length);
     }
 
     private function generateIv() {
@@ -128,11 +128,11 @@ class JOSE_JWE extends JOSE_JWT {
     private function encryptContentEncryptionKey($public_or_private_key) {
         switch ($this->header['alg']) {
             case 'RSA1_5':
-                $rsa = $this->rsa($public_or_private_key, CRYPT_RSA_ENCRYPTION_PKCS1);
+                $rsa = $this->rsa($public_or_private_key, phpseclib\CRYPT\RSA::ENCRYPTION_PKCS1);
                 $this->jwe_encrypted_key = $rsa->encrypt($this->content_encryption_key);
                 break;
             case 'RSA-OAEP':
-                $rsa = $this->rsa($public_or_private_key, CRYPT_RSA_ENCRYPTION_OAEP);
+                $rsa = $this->rsa($public_or_private_key, phpseclib\CRYPT\RSA::ENCRYPTION_OAEP);
                 $this->jwe_encrypted_key = $rsa->encrypt($this->content_encryption_key);
                 break;
             case 'A128KW':
@@ -153,11 +153,11 @@ class JOSE_JWE extends JOSE_JWT {
     private function decryptContentEncryptionKey($public_or_private_key) {
         switch ($this->header['alg']) {
             case 'RSA1_5':
-                $rsa = $this->rsa($public_or_private_key, CRYPT_RSA_ENCRYPTION_PKCS1);
+                $rsa = $this->rsa($public_or_private_key, phpseclib\CRYPT\RSA::ENCRYPTION_PKCS1);
                 $this->content_encryption_key = $rsa->decrypt($this->jwe_encrypted_key);
                 break;
             case 'RSA-OAEP':
-                $rsa = $this->rsa($public_or_private_key, CRYPT_RSA_ENCRYPTION_OAEP);
+                $rsa = $this->rsa($public_or_private_key, phpseclib\CRYPT\RSA::ENCRYPTION_OAEP);
                 $this->content_encryption_key = $rsa->decrypt($this->jwe_encrypted_key);
                 break;
             case 'A128KW':

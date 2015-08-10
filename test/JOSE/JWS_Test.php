@@ -100,7 +100,7 @@ class JOSE_JWS_Test extends JOSE_TestCase {
 
     function testSignWithCryptRSA() {
         $expected = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJmb28iOiJiYXIifQ.GzzxRgDHjgBjDkbMsKaFhWnQ43xKlh8T7Ce34b9ye4afuIfE2EglIlK1itGRx1PtH7UOcwtXVWElJ0lHuuTl6hCUL5SDOMJxiPfr5SkTZFWy2SlSYNtdRfra6NPeEa3-a_15dUYv41QY14TCl5HaP7jeMLeqcTlMcjra9fDPMWUciSyWay6025wUiSQBmWW-19GNZQnRHxXNX3lCVMEQMASYT-6QqBvoiJ6vezIt08RghgGdMH1iGY_Gnb7ISuA-lvKk6fcQvQ3MN5Cx0CeqXlXP8NQQF0OwkUgTjNGsKmCG6jKlLZLeXJb72KVK1yR-6jp7OQqqzrovIP7lp-FwIw';
-        $key = new Crypt_RSA();
+        $key = new phpseclib\Crypt\RSA();
         $key->loadKey($this->rsa_keys['private']);
         $jws = new JOSE_JWS($this->plain_jwt);
         $jws = $jws->sign($key, 'RS256');
@@ -108,7 +108,7 @@ class JOSE_JWS_Test extends JOSE_TestCase {
     }
 
     function testSignWithJWK() {
-        $key = new Crypt_RSA();
+        $key = new phpseclib\Crypt\RSA();
         $key->loadKey($this->rsa_keys['private']);
         $jwk = JOSE_JWK::encode($key);
         $jws = new JOSE_JWS($this->plain_jwt);
@@ -202,7 +202,7 @@ class JOSE_JWS_Test extends JOSE_TestCase {
     }
 
     function testVerifyWithCryptRSA() {
-        $key = new Crypt_RSA();
+        $key = new phpseclib\Crypt\RSA();
         $key->loadKey($this->rsa_keys['public']);
         $input = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJmb28iOiJiYXIifQ.GzzxRgDHjgBjDkbMsKaFhWnQ43xKlh8T7Ce34b9ye4afuIfE2EglIlK1itGRx1PtH7UOcwtXVWElJ0lHuuTl6hCUL5SDOMJxiPfr5SkTZFWy2SlSYNtdRfra6NPeEa3-a_15dUYv41QY14TCl5HaP7jeMLeqcTlMcjra9fDPMWUciSyWay6025wUiSQBmWW-19GNZQnRHxXNX3lCVMEQMASYT-6QqBvoiJ6vezIt08RghgGdMH1iGY_Gnb7ISuA-lvKk6fcQvQ3MN5Cx0CeqXlXP8NQQF0OwkUgTjNGsKmCG6jKlLZLeXJb72KVK1yR-6jp7OQqqzrovIP7lp-FwIw';
         $jwt = JOSE_JWT::decode($input);
@@ -211,7 +211,7 @@ class JOSE_JWS_Test extends JOSE_TestCase {
     }
 
     function testVerifyWithJWK() {
-        $key = new Crypt_RSA();
+        $key = new phpseclib\Crypt\RSA();
         $key->loadKey($this->rsa_keys['public']);
         $jwk = JOSE_JWK::encode($key);
         $input = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJmb28iOiJiYXIifQ.GzzxRgDHjgBjDkbMsKaFhWnQ43xKlh8T7Ce34b9ye4afuIfE2EglIlK1itGRx1PtH7UOcwtXVWElJ0lHuuTl6hCUL5SDOMJxiPfr5SkTZFWy2SlSYNtdRfra6NPeEa3-a_15dUYv41QY14TCl5HaP7jeMLeqcTlMcjra9fDPMWUciSyWay6025wUiSQBmWW-19GNZQnRHxXNX3lCVMEQMASYT-6QqBvoiJ6vezIt08RghgGdMH1iGY_Gnb7ISuA-lvKk6fcQvQ3MN5Cx0CeqXlXP8NQQF0OwkUgTjNGsKmCG6jKlLZLeXJb72KVK1yR-6jp7OQqqzrovIP7lp-FwIw';
@@ -223,7 +223,7 @@ class JOSE_JWS_Test extends JOSE_TestCase {
     function testVerifyWithGoogleIDToken() {
         $id_token_string = file_get_contents($this->fixture_dir . 'google.jwt');
         $cert_string = file_get_contents($this->fixture_dir . 'google.crt');
-        $x509 = new File_X509();
+        $x509 = new phpseclib\File\X509();
         $x509->loadX509($cert_string);
         $public_key = $x509->getPublicKey()->getPublicKey();
         $jwt = JOSE_JWT::decode($id_token_string);
