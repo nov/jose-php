@@ -13,9 +13,9 @@ class JOSE_JWK {
     function toKey() {
         switch ($this->components['kty']) {
             case 'RSA':
-                $rsa = new Crypt_RSA();
-                $n = new Math_BigInteger('0x' . bin2hex(JOSE_URLSafeBase64::decode($this->components['n'])), 16);
-                $e = new Math_BigInteger('0x' . bin2hex(JOSE_URLSafeBase64::decode($this->components['e'])), 16);
+                $rsa = new phpseclib\Crypt\RSA();
+                $n = new phpseclib\Math\BigInteger('0x' . bin2hex(JOSE_URLSafeBase64::decode($this->components['n'])), 16);
+                $e = new phpseclib\Math\BigInteger('0x' . bin2hex(JOSE_URLSafeBase64::decode($this->components['e'])), 16);
                 if (array_key_exists('d', $this->components)) {
                     throw new JOSE_Exception_UnexpectedAlgorithm('RSA private key isn\'t supported');
                 } else {
@@ -37,7 +37,7 @@ class JOSE_JWK {
 
     static function encode($key, $extra_components = array()) {
         switch(get_class($key)) {
-            case 'Crypt_RSA':
+            case 'phpseclib\Crypt\RSA':
                 $components = array(
                     'kty' => 'RSA',
                     'e' => JOSE_URLSafeBase64::encode($key->publicExponent->toBytes()),
