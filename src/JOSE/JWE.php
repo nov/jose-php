@@ -4,8 +4,6 @@ use phpseclib\Crypt\RSA;
 use phpseclib\Crypt\AES;
 use phpseclib\Crypt\Random;
 
-require_once dirname(__FILE__) . '/JWT.php';
-
 class JOSE_JWE extends JOSE_JWT {
     var $plain_text;
     var $cipher_text;
