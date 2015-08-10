@@ -1,5 +1,8 @@
 <?php
 
+use phpseclib\Crypt\RSA;
+use phpseclib\Math\BigInteger;
+
 class JOSE_JWK {
     var $components = array();
 
@@ -13,9 +16,9 @@ class JOSE_JWK {
     function toKey() {
         switch ($this->components['kty']) {
             case 'RSA':
-                $rsa = new phpseclib\Crypt\RSA();
-                $n = new phpseclib\Math\BigInteger('0x' . bin2hex(JOSE_URLSafeBase64::decode($this->components['n'])), 16);
-                $e = new phpseclib\Math\BigInteger('0x' . bin2hex(JOSE_URLSafeBase64::decode($this->components['e'])), 16);
+                $rsa = new RSA();
+                $n = new BigInteger('0x' . bin2hex(JOSE_URLSafeBase64::decode($this->components['n'])), 16);
+                $e = new BigInteger('0x' . bin2hex(JOSE_URLSafeBase64::decode($this->components['e'])), 16);
                 if (array_key_exists('d', $this->components)) {
                     throw new JOSE_Exception_UnexpectedAlgorithm('RSA private key isn\'t supported');
                 } else {

@@ -1,5 +1,8 @@
 <?php
 
+use phpseclib\Crypt\RSA;
+use phpseclib\Crypt\RC2;
+
 class JOSE_JWK_Test extends JOSE_TestCase {
     function testConstructWithoutKTY() {
         $this->setExpectedException('JOSE_Exception_InvalidFormat');
@@ -17,7 +20,7 @@ class JOSE_JWK_Test extends JOSE_TestCase {
     }
 
     function testEncodeRSAPublicKey() {
-        $rsa = new phpseclib\Crypt\RSA();
+        $rsa = new RSA();
         $rsa->loadKey($this->rsa_keys['public']);
         $jwk = JOSE_JWK::encode($rsa);
         $this->assertInstanceOf('JOSE_JWK', $jwk);
@@ -27,7 +30,7 @@ class JOSE_JWK_Test extends JOSE_TestCase {
     }
 
     function testEncodeRSAPrivateKey() {
-        $rsa = new phpseclib\Crypt\RSA();
+        $rsa = new RSA();
         $rsa->loadKey($this->rsa_keys['private']);
         $jwk = JOSE_JWK::encode($rsa);
         $this->assertInstanceOf('JOSE_JWK', $jwk);
@@ -37,7 +40,7 @@ class JOSE_JWK_Test extends JOSE_TestCase {
     }
 
     function testEncodeWithExtraComponents() {
-        $rsa = new phpseclib\Crypt\RSA();
+        $rsa = new RSA();
         $rsa->loadKey($this->rsa_keys['private']);
         $jwk = JOSE_JWK::encode($rsa, array(
             'kid' => '12345',
@@ -48,7 +51,7 @@ class JOSE_JWK_Test extends JOSE_TestCase {
     }
 
     function testEncodeWithUnexpectedAlg() {
-        $key = new phpseclib\Crypt\RC2();
+        $key = new RC2();
         $this->setExpectedException('JOSE_Exception_UnexpectedAlgorithm');
         JOSE_JWK::encode($key);
     }
@@ -63,7 +66,7 @@ class JOSE_JWK_Test extends JOSE_TestCase {
         $this->assertInstanceOf('phpseclib\Crypt\RSA', $key);
         $this->assertEquals(
             preg_replace("/\r\n|\r|\n/", '', $this->rsa_keys['public']),
-            preg_replace("/\r\n|\r|\n/", '', $key->getPublicKey(phpseclib\CRYPT\RSA::PUBLIC_FORMAT_PKCS1_RAW))
+            preg_replace("/\r\n|\r|\n/", '', $key->getPublicKey(RSA::PUBLIC_FORMAT_PKCS1_RAW))
         );
     }
 

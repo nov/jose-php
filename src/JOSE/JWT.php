@@ -1,7 +1,5 @@
 <?php
 
-require_once 'Crypt/RSA.php';
-require_once 'Crypt/AES.php';
 require_once dirname(__FILE__) . '/Exception.php';
 require_once dirname(__FILE__) . '/JWS.php';
 require_once dirname(__FILE__) . '/JWE.php';
