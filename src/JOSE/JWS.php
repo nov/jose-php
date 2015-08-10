@@ -12,6 +12,25 @@ class JOSE_JWS extends JOSE_JWT {
         $this->raw = $jwt->raw;
     }
 
+    function toJson($syntax = 'flattened') {
+        if ($syntax == 'flattened') {
+            $components = array(
+                'protected' => $this->compact((object) $this->header),
+                'payload'   => $this->compact((object) $this->claims),
+                'signature' => $this->compact($this->signature)
+            );
+        } else {
+            $components = array(
+                'payload' => $this->compact((object) $this->claims),
+                'signatures' => array(
+                    'protected' => $this->compact((object) $this->header),
+                    'signature' => $this->compact($this->signature)
+                )
+            );
+        }
+        return json_encode($components);
+    }
+
     function sign($private_key_or_secret, $algorithm = 'HS256') {
         $this->header['alg'] = $algorithm;
         $this->signature = $this->_sign($private_key_or_secret);

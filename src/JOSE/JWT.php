@@ -32,15 +32,6 @@ class JOSE_JWT {
         return $this->toString();
     }
 
-    function toJson() {
-        return json_encode(
-   			   array(
-			         "protected" => $this->compact((object) $this->header),
-			         "payload" => $this->compact((object) $this->claims),
-			         "signature" => $this->compact($this->signature)
-				 ));
-    }
-    
     function sign($private_key_or_secret, $algorithm = 'HS256') {
         $jws = $this->toJWS();
         $jws->sign($private_key_or_secret, $algorithm);

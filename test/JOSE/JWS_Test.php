@@ -14,6 +14,20 @@ class JOSE_JWS_Test extends JOSE_TestCase {
         ));
     }
 
+    function testToJSON() {
+        $expected = '{"protected":"eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9","payload":"eyJmb28iOiJiYXIifQ","signature":"GzzxRgDHjgBjDkbMsKaFhWnQ43xKlh8T7Ce34b9ye4afuIfE2EglIlK1itGRx1PtH7UOcwtXVWElJ0lHuuTl6hCUL5SDOMJxiPfr5SkTZFWy2SlSYNtdRfra6NPeEa3-a_15dUYv41QY14TCl5HaP7jeMLeqcTlMcjra9fDPMWUciSyWay6025wUiSQBmWW-19GNZQnRHxXNX3lCVMEQMASYT-6QqBvoiJ6vezIt08RghgGdMH1iGY_Gnb7ISuA-lvKk6fcQvQ3MN5Cx0CeqXlXP8NQQF0OwkUgTjNGsKmCG6jKlLZLeXJb72KVK1yR-6jp7OQqqzrovIP7lp-FwIw"}';
+        $jws = new JOSE_JWS($this->plain_jwt);
+        $jws = $jws->sign($this->rsa_keys['private'], 'RS256');
+        $this->assertEquals($expected, sprintf('%s', $jws->toJSON()));
+    }
+
+    function testToJSONWithGeneralSyntax() {
+        $expected = '{"payload":"eyJmb28iOiJiYXIifQ","signatures":{"protected":"eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9","signature":"GzzxRgDHjgBjDkbMsKaFhWnQ43xKlh8T7Ce34b9ye4afuIfE2EglIlK1itGRx1PtH7UOcwtXVWElJ0lHuuTl6hCUL5SDOMJxiPfr5SkTZFWy2SlSYNtdRfra6NPeEa3-a_15dUYv41QY14TCl5HaP7jeMLeqcTlMcjra9fDPMWUciSyWay6025wUiSQBmWW-19GNZQnRHxXNX3lCVMEQMASYT-6QqBvoiJ6vezIt08RghgGdMH1iGY_Gnb7ISuA-lvKk6fcQvQ3MN5Cx0CeqXlXP8NQQF0OwkUgTjNGsKmCG6jKlLZLeXJb72KVK1yR-6jp7OQqqzrovIP7lp-FwIw"}}';
+        $jws = new JOSE_JWS($this->plain_jwt);
+        $jws = $jws->sign($this->rsa_keys['private'], 'RS256');
+        $this->assertEquals($expected, sprintf('%s', $jws->toJSON('general-syntax')));
+    }
+
     function testSignHS256() {
         $expected = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmb28iOiJiYXIifQ.jBKXM6zRu0nP2tYgNTgFxRDwKoiEbNl1P6GyXEHIwEw';
         $jws = new JOSE_JWS($this->plain_jwt);
