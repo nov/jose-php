@@ -1,6 +1,6 @@
 {
   "name": "gree/jose",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "JWT, JWS and JWS implementation in PHP",
   "keywords": [
     "JSON Web Token", "JSON Web Signature", "JSON Web Encryption",
@@ -17,10 +17,10 @@
     }
   ],
   "require": {
-    "phpseclib/phpseclib": ">=0.3.5 <1.0.0"
+    "phpseclib/phpseclib": ">=2.0.0"
   },
   "require-dev": {
-    "phpunit/phpunit": "~3.7.10"
+    "phpunit/phpunit": "4.8.*"
   },
   "include-path": ["src/"],
   "autoload": {

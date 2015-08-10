@@ -1,7 +1,5 @@
 <?php
 
-require_once 'Crypt/RSA.php';
-require_once 'Crypt/AES.php';
 require_once dirname(__FILE__) . '/Exception.php';
 require_once dirname(__FILE__) . '/JWS.php';
 require_once dirname(__FILE__) . '/JWE.php';
@@ -34,15 +32,6 @@ class JOSE_JWT {
         return $this->toString();
     }
 
-    function toJson() {
-        return json_encode(
-   			   array(
-			         "protected" => $this->compact((object) $this->header),
-			         "payload" => $this->compact((object) $this->claims),
-			         "signature" => $this->compact($this->signature)
-				 ));
-    }
-    
     function sign($private_key_or_secret, $algorithm = 'HS256') {
         $jws = $this->toJWS();
         $jws->sign($private_key_or_secret, $algorithm);
