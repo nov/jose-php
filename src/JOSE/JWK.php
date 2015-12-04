@@ -2,7 +2,7 @@
 
 use phpseclib\Crypt\RSA;
 use phpseclib\Math\BigInteger;
-use phpseclib\Crypt\Hash;
+use phpseclib\Crypt\Hash; 
 
 class JOSE_JWK {
     var $components = array();
@@ -42,25 +42,25 @@ class JOSE_JWK {
     static function encode($key, $extra_components = array()) {
         switch(get_class($key)) {
             case 'phpseclib\Crypt\RSA':
-	      $components = array(
-				  'kty' => 'RSA',
-				  'e' => JOSE_URLSafeBase64::encode($key->publicExponent->toBytes()),
-				  'n' => JOSE_URLSafeBase64::encode($key->modulus->toBytes())
-				  );
-	      if ($key->exponent != $key->publicExponent) {
-		$components = array_merge($components, array(
-							     'd' => JOSE_URLSafeBase64::encode($key->exponent->toBytes())
-							     ));
-	      }
-	      return new self(array_merge($components, $extra_components));
-	default:
-	  throw new JOSE_Exception_UnexpectedAlgorithm('Unknown key type');
+                $components = array(
+                    'kty' => 'RSA',
+                    'e' => JOSE_URLSafeBase64::encode($key->publicExponent->toBytes()),
+                    'n' => JOSE_URLSafeBase64::encode($key->modulus->toBytes())
+                );
+                if ($key->exponent != $key->publicExponent) {
+                    $components = array_merge($components, array(
+                        'd' => JOSE_URLSafeBase64::encode($key->exponent->toBytes())
+                    ));
+                }
+                return new self(array_merge($components, $extra_components));
+            default:
+                throw new JOSE_Exception_UnexpectedAlgorithm('Unknown key type');
         }
     }
 
     static function decode($components) {
-      $jwk = new self($components);
-      return $jwk->toKey();
+        $jwk = new self($components);
+        return $jwk->toKey();
     }
     
     /** 
@@ -70,19 +70,19 @@ class JOSE_JWK {
     function thumbprint() {
       $requiredcomp=array();
       switch ($this->components['kty']) {
-        case 'RSA':
-	  $requiredcomp=array("e"=>$this->components["e"],
-			      "kty"=>"RSA",
-			      "n"=>$this->components["n"]
-			      ); // ORDER MATTERS as required by RFC !
-	  break;
-        default:
-	  throw new JOSE_Exception_UnexpectedAlgorithm('Unknown key type');
+      case 'RSA':
+        $requiredcomp=array("e"=>$this->components["e"],
+			    "kty"=>"RSA",
+			    "n"=>$this->components["n"]
+			    ); // ORDER MATTERS as required by RFC !
+        break;
+      default:
+        throw new JOSE_Exception_UnexpectedAlgorithm('Unknown key type');
       }     
       $hash = new Hash('sha256');
       return JOSE_URLSafeBase64::encode(
 					$hash->hash( json_encode( $requiredcomp ) )
 					);
     }
-    
+
 }
