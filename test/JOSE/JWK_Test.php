@@ -91,4 +91,13 @@ class JOSE_JWK_Test extends JOSE_TestCase {
         $this->setExpectedException('JOSE_Exception_UnexpectedAlgorithm');
         JOSE_JWK::decode($components);
     }
+
+    function testThumbprint() {
+        $rsa = new RSA();
+        $rsa->loadKey($this->rsa_keys['public']);
+        $jwk = JOSE_JWK::encode($rsa);
+        $this->assertInstanceOf('JOSE_JWK', $jwk);
+        $this->assertEquals('nuBTimkcSt_AuEsD8Yv3l8CoGV31bu_3gsRDGN1iVKA', $jwk->thumbprint() );
+    }
+
 }

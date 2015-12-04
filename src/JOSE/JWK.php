@@ -75,6 +75,7 @@ class JOSE_JWK {
 			      "kty"=>"RSA",
 			      "n"=>$this->components["n"]
 			      ); // ORDER MATTERS as required by RFC !
+	  break;
         default:
 	  throw new JOSE_Exception_UnexpectedAlgorithm('Unknown key type');
       }     
