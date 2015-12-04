@@ -97,7 +97,9 @@ class JOSE_JWK_Test extends JOSE_TestCase {
         $rsa->loadKey($this->rsa_keys['public']);
         $jwk = JOSE_JWK::encode($rsa);
         $this->assertInstanceOf('JOSE_JWK', $jwk);
-        $this->assertEquals('nuBTimkcSt_AuEsD8Yv3l8CoGV31bu_3gsRDGN1iVKA', $jwk->thumbprint() );
+        $this->assertEquals('nuBTimkcSt_AuEsD8Yv3l8CoGV31bu_3gsRDGN1iVKA', $jwk->thumbprint());
+        $this->assertEquals('nuBTimkcSt_AuEsD8Yv3l8CoGV31bu_3gsRDGN1iVKA', $jwk->thumbprint('sha256'));
+        $this->assertEquals('6v7pXTnQLMiQgvJlPJUdhAUSuGLzgF8C1r3ABAMFet6bc53ea-Pq4ZGbGu3RoAFsNRT1-RhTzDqtqXuLU6NOtw', $jwk->thumbprint('sha512'));
     }
 
 }

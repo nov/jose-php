@@ -2,7 +2,7 @@
 
 use phpseclib\Crypt\RSA;
 use phpseclib\Math\BigInteger;
-use phpseclib\Crypt\Hash; 
+use phpseclib\Crypt\Hash;
 
 class JOSE_JWK {
     var $components = array();
@@ -27,6 +27,28 @@ class JOSE_JWK {
                 }
                 $rsa->loadKey($pem_string);
                 return $rsa;
+            default:
+                throw new JOSE_Exception_UnexpectedAlgorithm('Unknown key type');
+        }
+    }
+
+    function thumbprint($hash_algorithm = 'sha256') {
+        $hash = new Hash($hash_algorithm);
+        return JOSE_URLSafeBase64::encode(
+            $hash->hash(
+                json_encode($this->normalized())
+            )
+        );
+    }
+
+    private function normalized() {
+        switch ($this->components['kty']) {
+            case 'RSA':
+                return array(
+                    'e'   => $this->components['e'],
+                    'kty' => $this->components['kty'],
+                    'n'   => $this->components['n']
+                );
             default:
                 throw new JOSE_Exception_UnexpectedAlgorithm('Unknown key type');
         }
@@ -62,27 +84,4 @@ class JOSE_JWK {
         $jwk = new self($components);
         return $jwk->toKey();
     }
-    
-    /** 
-     * Returns the JWK Thumbprint of the Json Web Key
-     * see https://tools.ietf.org/html/rfc7638
-     */
-    function thumbprint() {
-      $requiredcomp=array();
-      switch ($this->components['kty']) {
-      case 'RSA':
-        $requiredcomp=array("e"=>$this->components["e"],
-			    "kty"=>"RSA",
-			    "n"=>$this->components["n"]
-			    ); // ORDER MATTERS as required by RFC !
-        break;
-      default:
-        throw new JOSE_Exception_UnexpectedAlgorithm('Unknown key type');
-      }     
-      $hash = new Hash('sha256');
-      return JOSE_URLSafeBase64::encode(
-					$hash->hash( json_encode( $requiredcomp ) )
-					);
-    }
-
 }
