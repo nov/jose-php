@@ -2,8 +2,6 @@
 
 use phpseclib\Crypt\RSA;
 
-require_once dirname(__FILE__) . '/JWT.php';
-
 class JOSE_JWS extends JOSE_JWT {
     function __construct($jwt) {
         $this->header = $jwt->header;

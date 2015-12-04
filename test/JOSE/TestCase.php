@@ -1,7 +1,5 @@
 <?php
 
-require_once dirname(__FILE__) . '/../../src/JOSE/JWT.php';
-
 abstract class JOSE_TestCase extends PHPUnit_Framework_TestCase {
     var $fixture_dir;
     var $rsa_keys;
