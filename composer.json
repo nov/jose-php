@@ -1,6 +1,6 @@
 {
   "name": "gree/jose",
-  "version": "2.0.1",
+  "version": "2.1.0",
   "description": "JWT, JWS and JWS implementation in PHP",
   "keywords": [
     "JSON Web Token", "JSON Web Signature", "JSON Web Encryption",
