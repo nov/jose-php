@@ -27,6 +27,13 @@ class JOSE_JWE extends JOSE_JWT {
     function encrypt($public_key_or_secret, $algorithm = 'RSA1_5', $encryption_method = 'A128CBC-HS256') {
         $this->header['alg'] = $algorithm;
         $this->header['enc'] = $encryption_method;
+        if (
+            $public_key_or_secret instanceof JOSE_JWK &&
+            !array_key_exists('kid', $this->header) &&
+            array_key_exists('kid', $public_key_or_secret->components)
+        ) {
+            $this->header['kid'] = $public_key_or_secret->components['kid'];
+        }
         $this->plain_text = $this->raw;
         $this->generateContentEncryptionKey($public_key_or_secret);
         $this->encryptContentEncryptionKey($public_key_or_secret);
@@ -56,8 +63,14 @@ class JOSE_JWE extends JOSE_JWT {
     }
 
     private function rsa($public_or_private_key, $padding_mode) {
-        $rsa = new RSA();
-        $rsa->loadKey($public_or_private_key);
+        if ($public_or_private_key instanceof JOSE_JWK) {
+            $rsa = $public_or_private_key->toKey();
+        } else if ($public_or_private_key instanceof RSA) {
+            $rsa = $public_or_private_key;
+        } else {
+            $rsa = new RSA();
+            $rsa->loadKey($public_or_private_key);
+        }
         $rsa->setEncryptionMode($padding_mode);
         return $rsa;
     }

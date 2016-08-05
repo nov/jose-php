@@ -31,6 +31,13 @@ class JOSE_JWS extends JOSE_JWT {
 
     function sign($private_key_or_secret, $algorithm = 'HS256') {
         $this->header['alg'] = $algorithm;
+        if (
+            $private_key_or_secret instanceof JOSE_JWK &&
+            !array_key_exists('kid', $this->header) &&
+            array_key_exists('kid', $private_key_or_secret->components)
+        ) {
+            $this->header['kid'] = $private_key_or_secret->components['kid'];
+        }
         $this->signature = $this->_sign($private_key_or_secret);
         if (!$this->signature) {
             throw new JOSE_Exception('Signing failed because of unknown reason');

@@ -11,12 +11,12 @@ class JOSE_JWK_Test extends JOSE_TestCase {
 
     function testToString() {
         $jwk = new JOSE_JWK(array('kty' => 'RSA', 'e' => 'e', 'n' => 'n'));
-        $this->assertEquals('{"kty":"RSA","e":"e","n":"n"}', $jwk->toString());
+        $this->assertEquals('{"kty":"RSA","e":"e","n":"n","kid":"lPd1Hx7fpYY23pQVKnFvOEtk_jFe5EV8ZISUGTSGA_U"}', $jwk->toString());
     }
 
     function test__toString() {
         $jwk = new JOSE_JWK(array('kty' => 'RSA', 'e' => 'e', 'n' => 'n'));
-        $this->assertEquals('{"kty":"RSA","e":"e","n":"n"}', sprintf('%s', $jwk));
+        $this->assertEquals('{"kty":"RSA","e":"e","n":"n","kid":"lPd1Hx7fpYY23pQVKnFvOEtk_jFe5EV8ZISUGTSGA_U"}', sprintf('%s', $jwk));
     }
 
     function testEncodeRSAPublicKey() {
