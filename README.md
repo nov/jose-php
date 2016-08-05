@@ -48,8 +48,7 @@ NOTE: `$private_key` can be `phpseclib\Crypt\RSA` instance.
 ```php
 $public_key = "-----BEGIN RSA PUBLIC KEY-----\n....";
 $jwt_string = 'eyJ...';
-$jwt = JOSE_JWT::decode($jwt_string);
-$jws = new JOSE_JWS($jwt);
+$jws = JOSE_JWT::decode($jwt_string);
 $jws->verify($public_key, 'RS256');
 ```
 
