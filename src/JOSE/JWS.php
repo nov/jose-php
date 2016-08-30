@@ -64,7 +64,6 @@ class JOSE_JWS extends JOSE_JWT {
         }
         $rsa->setHash($this->digest());
         $rsa->setMGFHash($this->digest());
-        $rsa->setSaltLength(false); # NOTE: https://github.com/phpseclib/phpseclib/issues/768
         $rsa->setSignatureMode($padding_mode);
         return $rsa;
     }
@@ -129,7 +128,7 @@ class JOSE_JWS extends JOSE_JWT {
             case 'HS256':
             case 'HS384':
             case 'HS512':
-                if ($using_autodetected_alg) {
+                if (isset($using_autodetected_alg)) {
                     throw new JOSE_Exception_UnexpectedAlgorithm(
                         'HMAC algs MUST be explicitly specified as $expected_alg'
                     );

@@ -143,21 +143,29 @@ class JOSE_JWS_Test extends JOSE_TestCase {
         $input = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmb28iOiJiYXIifQ.jBKXM6zRu0nP2tYgNTgFxRDwKoiEbNl1P6GyXEHIwEw';
         $jwt = JOSE_JWT::decode($input);
         $jws = new JOSE_JWS($jwt);
-        $this->assertInstanceOf('JOSE_JWS', $jws->verify('shared-secret'));
+        $this->assertInstanceOf('JOSE_JWS', $jws->verify('shared-secret', 'HS256'));
+    }
+
+    function testVerifyHS256_without_explicit_alg() {
+        $input = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmb28iOiJiYXIifQ.jBKXM6zRu0nP2tYgNTgFxRDwKoiEbNl1P6GyXEHIwEw';
+        $jwt = JOSE_JWT::decode($input);
+        $jws = new JOSE_JWS($jwt);
+        $this->setExpectedException('JOSE_Exception_UnexpectedAlgorithm');
+        $jws->verify('shared-secret');
     }
 
     function testVerifyHS384() {
         $input = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzM4NCJ9.eyJmb28iOiJiYXIifQ.EoHJwaBtAB7OQzhInUDK5QBrKqhYX8OodiAgusI3fOJsueTm6aOpKvngGj3afGQo';
         $jwt = JOSE_JWT::decode($input);
         $jws = new JOSE_JWS($jwt);
-        $this->assertInstanceOf('JOSE_JWS', $jws->verify('shared-secret'));
+        $this->assertInstanceOf('JOSE_JWS', $jws->verify('shared-secret', 'HS384'));
     }
 
     function testVerifyHS512() {
         $input = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJmb28iOiJiYXIifQ.eLwaujbDB1c19eOGpxwMksVHCkE5XLA4eps80ZDPAE8_FdQOMQvC6lF0mtAHljAai9XHEDWMXUz1NCeovs8ZVQ';
         $jwt = JOSE_JWT::decode($input);
         $jws = new JOSE_JWS($jwt);
-        $this->assertInstanceOf('JOSE_JWS', $jws->verify('shared-secret'));
+        $this->assertInstanceOf('JOSE_JWS', $jws->verify('shared-secret', 'HS512'));
     }
 
     function testVerifyRS256() {
@@ -258,7 +266,7 @@ class JOSE_JWS_Test extends JOSE_TestCase {
         $malformed_jwt = JOSE_JWT::decode(
             $this->plain_jwt->sign($this->rsa_keys['public'], 'HS256')->toString()
         );
-        // NOTE: attacker succeeded to let you recieve malformed JWT in this case.
+        $this->setExpectedException('JOSE_Exception_UnexpectedAlgorithm');
         $malformed_jwt->verify($this->rsa_keys['public']);
     }
 
