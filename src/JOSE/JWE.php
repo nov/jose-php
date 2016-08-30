@@ -152,7 +152,7 @@ class JOSE_JWE extends JOSE_JWT {
                 break;
             case 'dir':
                 $this->jwe_encrypted_key = '';
-                break;
+                return;
             case 'A128KW':
             case 'A256KW':
             case 'ECDH-ES':
@@ -162,8 +162,8 @@ class JOSE_JWE extends JOSE_JWT {
             default:
                 throw new JOSE_Exception_UnexpectedAlgorithm('Unknown algorithm');
         }
-        if (!$this->content_encryption_key) {
-            throw new JOSE_Exception_DecryptionFailed('Master key encryption failed');
+        if (!$this->jwe_encrypted_key) {
+            throw new JOSE_Exception_EncryptionFailed('Master key encryption failed');
         }
     }
 
