@@ -162,6 +162,9 @@ class JOSE_JWE extends JOSE_JWT {
             default:
                 throw new JOSE_Exception_UnexpectedAlgorithm('Unknown algorithm');
         }
+        if (!$this->content_encryption_key) {
+            throw new JOSE_Exception_DecryptionFailed('Master key encryption failed');
+        }
     }
 
     private function decryptContentEncryptionKey($private_key_or_secret) {
