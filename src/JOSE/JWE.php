@@ -190,7 +190,11 @@ class JOSE_JWE extends JOSE_JWT {
                 throw new JOSE_Exception_UnexpectedAlgorithm('Unknown algorithm');
         }
         if (!$this->content_encryption_key) {
-            throw new JOSE_Exception_DecryptionFailed('Master key decryption failed');
+            # NOTE:
+            #  Not to disclose timing difference between CEK decryption error and others.
+            #  Mitigating Bleichenbacher Attack on PKCS#1 v1.5
+            #  ref.) http://inaz2.hatenablog.com/entry/2016/01/26/222303
+            $this->generateContentEncryptionKey(null);
         }
     }
 
