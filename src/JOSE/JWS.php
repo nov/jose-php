@@ -122,14 +122,20 @@ class JOSE_JWS extends JOSE_JWT {
         $segments = explode('.', $this->raw);
         $signature_base_string = implode('.', array($segments[0], $segments[1]));
         if (!$expected_alg) {
-            # NOTE: might better to warn here
             $expected_alg = $this->header['alg'];
+            $using_autodetected_alg = true;
         }
         switch ($expected_alg) {
             case 'HS256':
             case 'HS384':
             case 'HS512':
-                return $this->signature === hash_hmac($this->digest(), $signature_base_string, $public_key_or_secret, true);
+                if ($using_autodetected_alg) {
+                    throw new JOSE_Exception_UnexpectedAlgorithm(
+                        'HMAC algs MUST be explicitly specified as $expected_alg'
+                    );
+                }
+                $hmac_hash = hash_hmac($this->digest(), $signature_base_string, $public_key_or_secret, true);
+                return hash_equals($this->signature, $hmac_hash);
             case 'RS256':
             case 'RS384':
             case 'RS512':
