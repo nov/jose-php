@@ -168,6 +168,8 @@ class JOSE_JWE extends JOSE_JWT {
     }
 
     private function decryptContentEncryptionKey($private_key_or_secret) {
+        $this->generateContentEncryptionKey(null); # NOTE: run this always not to make timing difference
+        $fake_content_encryption_key = $this->content_encryption_key;
         switch ($this->header['alg']) {
             case 'RSA1_5':
                 $rsa = $this->rsa($private_key_or_secret, RSA::ENCRYPTION_PKCS1);
@@ -194,7 +196,7 @@ class JOSE_JWE extends JOSE_JWT {
             #  Not to disclose timing difference between CEK decryption error and others.
             #  Mitigating Bleichenbacher Attack on PKCS#1 v1.5
             #  ref.) http://inaz2.hatenablog.com/entry/2016/01/26/222303
-            $this->generateContentEncryptionKey(null);
+            $this->content_encryption_key = $fake_content_encryption_key;
         }
     }
 
@@ -282,7 +284,7 @@ class JOSE_JWE extends JOSE_JWT {
     }
 
     private function checkAuthenticationTag() {
-        if ($this->authentication_tag === $this->calculateAuthenticationTag()) {
+        if (hash_equals($this->authentication_tag, $this->calculateAuthenticationTag())) {
             return true;
         } else {
             throw new JOSE_Exception_UnexpectedAlgorithm('Invalid authentication tag');
