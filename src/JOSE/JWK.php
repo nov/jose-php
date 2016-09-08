@@ -12,6 +12,9 @@ class JOSE_JWK {
             throw new JOSE_Exception_InvalidFormat('"kty" is required');
         }
         $this->components = $components;
+        if (!array_key_exists('kid', $this->components)) {
+            $this->components['kid'] = $this->thumbprint();
+        }
     }
 
     function toKey() {

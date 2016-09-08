@@ -31,6 +31,13 @@ class JOSE_JWS extends JOSE_JWT {
 
     function sign($private_key_or_secret, $algorithm = 'HS256') {
         $this->header['alg'] = $algorithm;
+        if (
+            $private_key_or_secret instanceof JOSE_JWK &&
+            !array_key_exists('kid', $this->header) &&
+            array_key_exists('kid', $private_key_or_secret->components)
+        ) {
+            $this->header['kid'] = $private_key_or_secret->components['kid'];
+        }
         $this->signature = $this->_sign($private_key_or_secret);
         if (!$this->signature) {
             throw new JOSE_Exception('Signing failed because of unknown reason');
@@ -57,7 +64,6 @@ class JOSE_JWS extends JOSE_JWT {
         }
         $rsa->setHash($this->digest());
         $rsa->setMGFHash($this->digest());
-        $rsa->setSaltLength(false); # NOTE: https://github.com/phpseclib/phpseclib/issues/768
         $rsa->setSignatureMode($padding_mode);
         return $rsa;
     }
@@ -115,14 +121,20 @@ class JOSE_JWS extends JOSE_JWT {
         $segments = explode('.', $this->raw);
         $signature_base_string = implode('.', array($segments[0], $segments[1]));
         if (!$expected_alg) {
-            # NOTE: might better to warn here
             $expected_alg = $this->header['alg'];
+            $using_autodetected_alg = true;
         }
         switch ($expected_alg) {
             case 'HS256':
             case 'HS384':
             case 'HS512':
-                return $this->signature === hash_hmac($this->digest(), $signature_base_string, $public_key_or_secret, true);
+                if (isset($using_autodetected_alg)) {
+                    throw new JOSE_Exception_UnexpectedAlgorithm(
+                        'HMAC algs MUST be explicitly specified as $expected_alg'
+                    );
+                }
+                $hmac_hash = hash_hmac($this->digest(), $signature_base_string, $public_key_or_secret, true);
+                return hash_equals($this->signature, $hmac_hash);
             case 'RS256':
             case 'RS384':
             case 'RS512':

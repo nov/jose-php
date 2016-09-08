@@ -96,14 +96,14 @@ class JOSE_JWT_Test extends JOSE_TestCase {
     function testVerify() {
         $input = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmb28iOiJiYXIifQ.bVhBeMrW5g33Vi4FLSLn7aqcmAiupmmw-AY17YxCYLI';
         $jwt = JOSE_JWT::decode($input);
-        $this->assertInstanceOf('JOSE_JWS', $jwt->verify('secret'));
+        $this->assertInstanceOf('JOSE_JWS', $jwt->verify('secret', 'HS256'));
     }
 
     function testVerifyInvalid() {
         $input = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmb28iOiJiYXIifQ.bVhBeMrW5g33Vi4FLSLn7aqcmAiupmmw-AY17YxCYLI-invalid';
         $jwt = JOSE_JWT::decode($input);
         $this->setExpectedException('JOSE_Exception_VerificationFailed');
-        $res = $jwt->verify('secret');
+        $res = $jwt->verify('secret', 'HS256');
     }
 
     function testEncrypt() {

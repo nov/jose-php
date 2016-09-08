@@ -1,12 +1,12 @@
 {
   "name": "gree/jose",
-  "version": "2.0.1",
+  "version": "2.2.1",
   "description": "JWT, JWS and JWS implementation in PHP",
   "keywords": [
     "JSON Web Token", "JSON Web Signature", "JSON Web Encryption",
     "JWT", "JWS", "JWE", "JOSE", "OpenID Connect", "ID Token"
   ],
-  "homepage": "https://github.com/gree/jose",
+  "homepage": "https://github.com/nov/jose",
   "license": "MIT",
   "type": "library",
   "authors": [
@@ -17,6 +17,7 @@
     }
   ],
   "require": {
+    "php": ">=5.6",
     "phpseclib/phpseclib": ">=2.0.0"
   },
   "require-dev": {
