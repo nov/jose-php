@@ -114,7 +114,7 @@ Not supported.
 ## Run Test
 
 ```bash
-git clone git://github.com/gree/jose.git
+git clone git://github.com/nov/jose.git
 cd jose
 php composer.phar install --dev
 ./vendor/bin/phpunit -c test/phpunit.xml --tap
@@ -122,4 +122,4 @@ php composer.phar install --dev
 
 ## Copyright
 
-Copyright &copy; 2013 GREE Inc. See LICENSE for details.
+Copyright &copy; 2013 Nov Matake. See LICENSE for details.
