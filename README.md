@@ -122,4 +122,4 @@ php composer.phar install --dev
 
 ## Copyright
 
-Copyright &copy; 2013 Nov Matake. See LICENSE for details.
+Copyright &copy; 2013 Nov Matake & GREE Inc. See LICENSE for details.
