@@ -6,7 +6,7 @@
     "JSON Web Token", "JSON Web Signature", "JSON Web Encryption",
     "JWT", "JWS", "JWE", "JOSE", "OpenID Connect", "ID Token"
   ],
-  "homepage": "https://github.com/gree/jose",
+  "homepage": "https://github.com/nov/jose",
   "license": "MIT",
   "type": "library",
   "authors": [
