@@ -39,9 +39,6 @@ class JOSE_JWS extends JOSE_JWT {
             $this->header['kid'] = $private_key_or_secret->components['kid'];
         }
         $this->signature = $this->_sign($private_key_or_secret);
-        if (!$this->signature) {
-            throw new JOSE_Exception('Signing failed because of unknown reason');
-        }
         return $this;
     }
 
@@ -103,7 +100,11 @@ class JOSE_JWS extends JOSE_JWT {
             case 'RS256':
             case 'RS384':
             case 'RS512':
-                return $this->rsa($private_key_or_secret, RSA::SIGNATURE_PKCS1)->sign($signature_base_string);
+                $hash = $this->rsa($private_key_or_secret, RSA::SIGNATURE_PKCS1)->sign($signature_base_string);
+                if (!$hash) {
+                    throw new JOSE_Exception('RSA signing failed because of unknown reason');
+                }
+                return $hash;
             case 'ES256':
             case 'ES384':
             case 'ES512':
