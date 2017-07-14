@@ -66,25 +66,33 @@ class JOSE_JWS extends JOSE_JWT {
     }
 
     private function digest() {
+        $digest = '';
         switch ($this->header['alg']) {
             case 'HS256':
             case 'RS256':
             case 'ES256':
             case 'PS256':
-                return 'sha256';
+                $digest =  'sha256';
+                break;
             case 'HS384':
             case 'RS384':
             case 'ES384':
             case 'PS384':
-                return 'sha384';
+                $digest = 'sha384';
+                break;
             case 'HS512':
             case 'RS512':
             case 'ES512':
             case 'PS512':
-                return 'sha512';
+                $digest = 'sha512';
+                break;
             default:
                 throw new JOSE_Exception_UnexpectedAlgorithm('Unknown algorithm');
         }
+        if(!in_array($digest, hash_algos())) {
+            throw new JOSE_Exception_UnexpectedAlgorithm(sprintf('Hashing algorithm %s does not exist', $this->header['alg']));
+        }
+        return $digest;
     }
 
     private function _sign($private_key_or_secret) {
@@ -92,6 +100,7 @@ class JOSE_JWS extends JOSE_JWT {
             $this->compact((object) $this->header),
             $this->compact((object) $this->claims)
         ));
+
         switch ($this->header['alg']) {
             case 'HS256':
             case 'HS384':

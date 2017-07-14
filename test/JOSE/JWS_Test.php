@@ -28,6 +28,12 @@ class JOSE_JWS_Test extends JOSE_TestCase {
         $this->assertEquals($expected, sprintf('%s', $jws->toJSON('general-syntax')));
     }
 
+    function testSignBadAlgorithm() {
+        $jws = new JOSE_JWS($this->plain_jwt);
+        $this->setExpectedException('JOSE_Exception_UnexpectedAlgorithm');
+        $jws = $jws->sign('shared-secret', 'blah');
+    }
+
     function testSignHS256() {
         $expected = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmb28iOiJiYXIifQ.jBKXM6zRu0nP2tYgNTgFxRDwKoiEbNl1P6GyXEHIwEw';
         $jws = new JOSE_JWS($this->plain_jwt);
