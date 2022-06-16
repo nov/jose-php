@@ -1,6 +1,6 @@
 <?php
 
-use phpseclib\Crypt\Random;
+use phpseclib3\Crypt\Random;
 
 class JOSE_JWE_Test extends JOSE_TestCase {
     var $plain_text;
