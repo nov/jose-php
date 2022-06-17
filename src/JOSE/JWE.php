@@ -133,6 +133,7 @@ class JOSE_JWE extends JOSE_JWT {
                 $this->jwe_encrypted_key = $rsa->encrypt($this->content_encryption_key);
                 break;
             case 'RSA-OAEP':
+            case 'RSA-OAEP-256':
                 $rsa = $this->rsa($public_key_or_secret, RSA::ENCRYPTION_OAEP);
                 $this->jwe_encrypted_key = $rsa->encrypt($this->content_encryption_key);
                 break;
@@ -162,6 +163,7 @@ class JOSE_JWE extends JOSE_JWT {
                 $this->content_encryption_key = $rsa->decrypt($this->jwe_encrypted_key);
                 break;
             case 'RSA-OAEP':
+            case 'RSA-OAEP-256':
                 $rsa = $this->rsa($private_key_or_secret, RSA::ENCRYPTION_OAEP);
                 $this->content_encryption_key = $rsa->decrypt($this->jwe_encrypted_key);
                 break;

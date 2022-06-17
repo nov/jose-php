@@ -65,6 +65,13 @@ class JOSE_JWE_Test extends JOSE_TestCase {
         $this->assertEquals($this->plain_text, $jwe_decoded->decrypt($this->rsa_keys['private'])->plain_text);
     }
 
+    function testEncryptRSAOAEP256_A256CBCHS512() {
+        $jwe = new JOSE_JWE($this->plain_text);
+        $jwe->encrypt($this->rsa_keys['public'], 'RSA-OAEP-256', 'A256CBC-HS512');
+        $jwe_decoded = JOSE_JWT::decode($jwe->toString());
+        $this->assertEquals($this->plain_text, $jwe_decoded->decrypt($this->rsa_keys['private'])->plain_text);
+    }
+
     function testEncryptDir_A128CBCHS256() {
         $secret = Random::string(256 / 8);
         $jwe = new JOSE_JWE($this->plain_text);
