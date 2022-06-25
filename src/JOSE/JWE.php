@@ -1,8 +1,8 @@
 <?php
 
-use phpseclib\Crypt\RSA;
-use phpseclib\Crypt\AES;
-use phpseclib\Crypt\Random;
+use phpseclib3\Crypt\RSA;
+use phpseclib3\Crypt\AES;
+use phpseclib3\Crypt\Random;
 
 class JOSE_JWE extends JOSE_JWT {
     var $plain_text;
@@ -68,11 +68,9 @@ class JOSE_JWE extends JOSE_JWT {
         } else if ($public_or_private_key instanceof RSA) {
             $rsa = $public_or_private_key;
         } else {
-            $rsa = new RSA();
-            $rsa->loadKey($public_or_private_key);
+            $rsa = RSA::load($public_or_private_key);
         }
-        $rsa->setEncryptionMode($padding_mode);
-        return $rsa;
+        return $rsa->withPadding($padding_mode);
     }
 
     private function cipher() {
@@ -82,19 +80,7 @@ class JOSE_JWE extends JOSE_JWT {
                 throw new JOSE_Exception_UnexpectedAlgorithm('Algorithm not supported');
             case 'A128CBC-HS256':
             case 'A256CBC-HS512':
-                $cipher = new AES(AES::MODE_CBC);
-                break;
-            default:
-                throw new JOSE_Exception_UnexpectedAlgorithm('Unknown algorithm');
-        }
-        switch ($this->header['enc']) {
-            case 'A128GCM':
-            case 'A128CBC-HS256':
-                $cipher->setBlockLength(128);
-                break;
-            case 'A256GCM':
-            case 'A256CBC-HS512':
-                $cipher->setBlockLength(256);
+                $cipher = new AES('CBC');
                 break;
             default:
                 throw new JOSE_Exception_UnexpectedAlgorithm('Unknown algorithm');
@@ -114,7 +100,7 @@ class JOSE_JWE extends JOSE_JWT {
                 break;
             case 'A256GCM':
             case 'A256CBC-HS512':
-                $this->iv = $this->generateRandomBytes(256 / 8);
+                $this->iv = $this->generateRandomBytes(128 / 8);
                 break;
             default:
                 throw new JOSE_Exception_UnexpectedAlgorithm('Unknown algorithm');
@@ -147,6 +133,7 @@ class JOSE_JWE extends JOSE_JWT {
                 $this->jwe_encrypted_key = $rsa->encrypt($this->content_encryption_key);
                 break;
             case 'RSA-OAEP':
+            case 'RSA-OAEP-256':
                 $rsa = $this->rsa($public_key_or_secret, RSA::ENCRYPTION_OAEP);
                 $this->jwe_encrypted_key = $rsa->encrypt($this->content_encryption_key);
                 break;
@@ -176,6 +163,7 @@ class JOSE_JWE extends JOSE_JWT {
                 $this->content_encryption_key = $rsa->decrypt($this->jwe_encrypted_key);
                 break;
             case 'RSA-OAEP':
+            case 'RSA-OAEP-256':
                 $rsa = $this->rsa($private_key_or_secret, RSA::ENCRYPTION_OAEP);
                 $this->content_encryption_key = $rsa->decrypt($this->jwe_encrypted_key);
                 break;

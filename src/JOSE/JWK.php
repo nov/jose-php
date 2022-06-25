@@ -1,8 +1,11 @@
 <?php
 
-use phpseclib\Crypt\RSA;
-use phpseclib\Math\BigInteger;
-use phpseclib\Crypt\Hash;
+use phpseclib3\Crypt\RSA;
+use phpseclib3\Math\BigInteger;
+use phpseclib3\Crypt\Hash;
+use phpseclib3\Crypt\RSA\Formats\Keys\PKCS8;
+use phpseclib3\Crypt\RSA\PrivateKey;
+use phpseclib3\Crypt\RSA\PublicKey;
 
 class JOSE_JWK {
     var $components = array();
@@ -20,16 +23,14 @@ class JOSE_JWK {
     function toKey() {
         switch ($this->components['kty']) {
             case 'RSA':
-                $rsa = new RSA();
                 $n = new BigInteger('0x' . bin2hex(JOSE_URLSafeBase64::decode($this->components['n'])), 16);
                 $e = new BigInteger('0x' . bin2hex(JOSE_URLSafeBase64::decode($this->components['e'])), 16);
                 if (array_key_exists('d', $this->components)) {
                     throw new JOSE_Exception_UnexpectedAlgorithm('RSA private key isn\'t supported');
                 } else {
-                    $pem_string = $rsa->_convertPublicKey($n, $e);
+                    $pem_string = PKCS8::savePublicKey($n, $e);
                 }
-                $rsa->loadKey($pem_string);
-                return $rsa;
+                return RSA::load($pem_string);
             default:
                 throw new JOSE_Exception_UnexpectedAlgorithm('Unknown key type');
         }
@@ -65,16 +66,25 @@ class JOSE_JWK {
     }
 
     static function encode($key, $extra_components = array()) {
-        switch(get_class($key)) {
-            case 'phpseclib\Crypt\RSA':
+        switch(true) {
+            case $key instanceof RSA:
+                switch(true) {
+                    case $key instanceof PrivateKey:
+                        $resource = openssl_pkey_get_private($key->toString('PKCS8'));
+                        break;
+                    case $key instanceof PublicKey:
+                        $resource = openssl_pkey_get_public($key->toString('PKCS8'));
+                        break;
+                }
+                $details = openssl_pkey_get_details($resource);
                 $components = array(
                     'kty' => 'RSA',
-                    'e' => JOSE_URLSafeBase64::encode($key->publicExponent->toBytes()),
-                    'n' => JOSE_URLSafeBase64::encode($key->modulus->toBytes())
+                    'e' => JOSE_URLSafeBase64::encode($details['rsa']['e']),
+                    'n' => JOSE_URLSafeBase64::encode($details['rsa']['n'])
                 );
-                if ($key->exponent != $key->publicExponent) {
+                if ($key instanceof PrivateKey) {
                     $components = array_merge($components, array(
-                        'd' => JOSE_URLSafeBase64::encode($key->exponent->toBytes())
+                        'd' => JOSE_URLSafeBase64::encode($details['rsa']['d'])
                     ));
                 }
                 return new self(array_merge($components, $extra_components));
