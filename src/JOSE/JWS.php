@@ -39,9 +39,6 @@ class JOSE_JWS extends JOSE_JWT {
             $this->header['kid'] = $private_key_or_secret->components['kid'];
         }
         $this->signature = $this->_sign($private_key_or_secret);
-        if (!$this->signature) {
-            throw new JOSE_Exception('Signing failed because of unknown reason');
-        }
         return $this;
     }
 
@@ -69,25 +66,33 @@ class JOSE_JWS extends JOSE_JWT {
     }
 
     private function digest() {
+        $digest = '';
         switch ($this->header['alg']) {
             case 'HS256':
             case 'RS256':
             case 'ES256':
             case 'PS256':
-                return 'sha256';
+                $digest =  'sha256';
+                break;
             case 'HS384':
             case 'RS384':
             case 'ES384':
             case 'PS384':
-                return 'sha384';
+                $digest = 'sha384';
+                break;
             case 'HS512':
             case 'RS512':
             case 'ES512':
             case 'PS512':
-                return 'sha512';
+                $digest = 'sha512';
+                break;
             default:
                 throw new JOSE_Exception_UnexpectedAlgorithm('Unknown algorithm');
         }
+        if(!in_array($digest, hash_algos())) {
+            throw new JOSE_Exception_UnexpectedAlgorithm(sprintf('Hashing algorithm %s does not exist', $this->header['alg']));
+        }
+        return $digest;
     }
 
     private function _sign($private_key_or_secret) {
@@ -95,6 +100,7 @@ class JOSE_JWS extends JOSE_JWT {
             $this->compact((object) $this->header),
             $this->compact((object) $this->claims)
         ));
+
         switch ($this->header['alg']) {
             case 'HS256':
             case 'HS384':
@@ -103,7 +109,11 @@ class JOSE_JWS extends JOSE_JWT {
             case 'RS256':
             case 'RS384':
             case 'RS512':
-                return $this->rsa($private_key_or_secret, RSA::SIGNATURE_PKCS1)->sign($signature_base_string);
+                $hash = $this->rsa($private_key_or_secret, RSA::SIGNATURE_PKCS1)->sign($signature_base_string);
+                if (!$hash) {
+                    throw new JOSE_Exception('RSA signing failed because of unknown reason');
+                }
+                return $hash;
             case 'ES256':
             case 'ES384':
             case 'ES512':
