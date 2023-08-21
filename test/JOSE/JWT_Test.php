@@ -63,19 +63,19 @@ class JOSE_JWT_Test extends JOSE_TestCase {
 
     function testDecodeWithTooManyDots() {
         $input = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJub25lIiwiZm9vIjoiZm9vIn0.eyJzdWIiOiJncmVlLXVpZC0xMjM0NSIsImlzcyI6Imh0dHBzOlwvXC9ncmVlLm5ldCIsImF1ZCI6ImdyZWUtYXBwaWQtMTIzNDUifQ..';
-        $this->setExpectedException('JOSE_Exception_InvalidFormat');
+        $this->expectException('JOSE_Exception_InvalidFormat');
         JOSE_JWT::decode($input);
     }
 
     function testDecodeWithTooFewDots() {
         $input = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJub25lIiwiZm9vIjoiZm9vIn0.eyJzdWIiOiJncmVlLXVpZC0xMjM0NSIsImlzcyI6Imh0dHBzOlwvXC9ncmVlLm5ldCIsImF1ZCI6ImdyZWUtYXBwaWQtMTIzNDUifQ';
-        $this->setExpectedException('JOSE_Exception_InvalidFormat');
+        $this->expectException('JOSE_Exception_InvalidFormat');
         JOSE_JWT::decode($input);
     }
 
     function testDecodeWithInvalidSerialization() {
         $input = 'header.payload.signature';
-        $this->setExpectedException('JOSE_Exception_InvalidFormat');
+        $this->expectException('JOSE_Exception_InvalidFormat');
         JOSE_JWT::decode($input);
     }
 
@@ -102,7 +102,7 @@ class JOSE_JWT_Test extends JOSE_TestCase {
     function testVerifyInvalid() {
         $input = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmb28iOiJiYXIifQ.bVhBeMrW5g33Vi4FLSLn7aqcmAiupmmw-AY17YxCYLI-invalid';
         $jwt = JOSE_JWT::decode($input);
-        $this->setExpectedException('JOSE_Exception_VerificationFailed');
+        $this->expectException('JOSE_Exception_VerificationFailed');
         $res = $jwt->verify('secret', 'HS256');
     }
 

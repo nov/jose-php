@@ -6,7 +6,7 @@ class JOSE_JWE_Test extends JOSE_TestCase {
     var $plain_text;
     var $rsa_keys;
 
-    function setUp() {
+    function setUp(): void {
         parent::setUp();
         $this->plain_text = 'Hello World';
     }
@@ -41,13 +41,13 @@ class JOSE_JWE_Test extends JOSE_TestCase {
 
     function testEncryptRSA15_A128GCM() {
         $jwe = new JOSE_JWE($this->plain_text);
-        $this->setExpectedException('JOSE_Exception_UnexpectedAlgorithm');
+        $this->expectException('JOSE_Exception_UnexpectedAlgorithm');
         $jwe->encrypt($this->rsa_keys['public'], 'RSA1_5', 'A128GCM');
     }
 
     function testEncryptRSA15_A256GCM() {
         $jwe = new JOSE_JWE($this->plain_text);
-        $this->setExpectedException('JOSE_Exception_UnexpectedAlgorithm');
+        $this->expectException('JOSE_Exception_UnexpectedAlgorithm');
         $jwe->encrypt($this->rsa_keys['public'], 'RSA1_5', 'A256GCM');
     }
 
@@ -75,19 +75,19 @@ class JOSE_JWE_Test extends JOSE_TestCase {
 
     function testEncryptA128KW_A128CBCHS256() {
         $jwe = new JOSE_JWE($this->plain_text);
-        $this->setExpectedException('JOSE_Exception_UnexpectedAlgorithm');
+        $this->expectException('JOSE_Exception_UnexpectedAlgorithm');
         $jwe->encrypt($this->rsa_keys['public'], 'A128KW');
     }
 
     function testEncryptRSA15_Unknown() {
         $jwe = new JOSE_JWE($this->plain_text);
-        $this->setExpectedException('JOSE_Exception_UnexpectedAlgorithm');
+        $this->expectException('JOSE_Exception_UnexpectedAlgorithm');
         $jwe->encrypt($this->rsa_keys['public'], 'RSA1_5', 'Unknown');
     }
 
     function testEncryptUnknown_A128CBCHS256() {
         $jwe = new JOSE_JWE($this->plain_text);
-        $this->setExpectedException('JOSE_Exception_UnexpectedAlgorithm');
+        $this->expectException('JOSE_Exception_UnexpectedAlgorithm');
         $jwe->encrypt($this->rsa_keys['public'], 'Unknown');
     }
 

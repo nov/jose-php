@@ -5,7 +5,7 @@ use phpseclib\Crypt\RC2;
 
 class JOSE_JWK_Test extends JOSE_TestCase {
     function testConstructWithoutKTY() {
-        $this->setExpectedException('JOSE_Exception_InvalidFormat');
+        $this->expectException('JOSE_Exception_InvalidFormat');
         new JOSE_JWK(array('n' => 'n'));
     }
 
@@ -52,7 +52,7 @@ class JOSE_JWK_Test extends JOSE_TestCase {
 
     function testEncodeWithUnexpectedAlg() {
         $key = new RC2();
-        $this->setExpectedException('JOSE_Exception_UnexpectedAlgorithm');
+        $this->expectException('JOSE_Exception_UnexpectedAlgorithm');
         JOSE_JWK::encode($key);
     }
 
@@ -77,7 +77,7 @@ class JOSE_JWK_Test extends JOSE_TestCase {
             'n' => 'x9vNhcvSrxjsegZAAo4OEuoZOV_oxINEeWneJYczS80_bQ1J6lSSJ81qecxXAzCLPlvsFoP4eeUNXSt_G7hP7SAM479N-kY_MzbihJ5LRY9sRzLbQTMeqsmDAmmQe4y3Ke3bvd70r8VOmo5pqM3IPLGwBkTRTQmyRsDQArilg6WtxDUgy5ol2STHFA8E1iCReh9bck8ZaLxzVhYRXZ0nuOKWGRMppocPlp55HVohOItUZh7uSCchLcVAZuhTTNaDLtLIJ6G0yNJvfEieJUhA8wGBoPhD3LMQwQMxTMerpjZhP_qjm6GgeWpKf-iVil86_PSy_z0Vw06_rD0sfXPtlQ',
             'd' => 'S3xQjvVh-PJv9tK_gHeJB0nWBx6bewWdakI7Pm9nR30ZNKYtQc15eoESczhjsPe3z_DGJebohZmmx4bzNlQSFBzj4W1TFXFM05oqSi7DfV1jZyzlNSYKsjT0P4gBoziNwc9uDLPWNUFPo_6gF7rJo2r1chix-Oftpt2Sc0SsdyEESBMR5REMccX5gZIhN-DUTN4gt9GNeDRy9h-gNFxgNNtt17HzEg52gbl3UnEuuPXE2wcctE1nxT3WDdtVqb6nbaNfxLiaAWaL2uYBvU2_AvKu1b7VEPmP9pTEMyriVzh4Jb2ZtIUpna518M044GPKs1TgMHSAxpOaQvnpar9lrQ'
         );
-        $this->setExpectedException('JOSE_Exception_UnexpectedAlgorithm');
+        $this->expectException(JOSE_Exception_UnexpectedAlgorithm::class);
         JOSE_JWK::decode($components);
     }
 
@@ -88,7 +88,7 @@ class JOSE_JWK_Test extends JOSE_TestCase {
             'x' => 'x',
             'y' => 'y'
         );
-        $this->setExpectedException('JOSE_Exception_UnexpectedAlgorithm');
+        $this->expectException('JOSE_Exception_UnexpectedAlgorithm');
         JOSE_JWK::decode($components);
     }
 

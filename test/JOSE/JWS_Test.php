@@ -7,7 +7,7 @@ class JOSE_JWS_Test extends JOSE_TestCase {
     var $plain_jwt;
     var $rsa_keys;
 
-    function setUp() {
+    function setUp(): void {
         parent::setUp();
         $this->plain_jwt = new JOSE_JWT(array(
             'foo' => 'bar'
@@ -105,13 +105,13 @@ class JOSE_JWS_Test extends JOSE_TestCase {
 
     function testSignRS256WithInvalidPrivateKey() {
         $jws = new JOSE_JWS($this->plain_jwt);
-        $this->setExpectedException('JOSE_Exception');
+        $this->expectException('JOSE_Exception');
         $jws = $jws->sign('invalid pem', 'RS256');
     }
 
     function testSignES256() {
         $jws = new JOSE_JWS($this->plain_jwt);
-        $this->setExpectedException('JOSE_Exception_UnexpectedAlgorithm');
+        $this->expectException('JOSE_Exception_UnexpectedAlgorithm');
         $jws = $jws->sign('es key should be here', 'ES256');
     }
 
@@ -129,13 +129,13 @@ class JOSE_JWS_Test extends JOSE_TestCase {
         $key->loadKey($this->rsa_keys['private']);
         $jwk = JOSE_JWK::encode($key);
         $jws = new JOSE_JWS($this->plain_jwt);
-        $this->setExpectedException('JOSE_Exception_UnexpectedAlgorithm');
+        $this->expectException('JOSE_Exception_UnexpectedAlgorithm');
         $jws->sign($jwk, 'RS256');
     }
 
     function testSignUnknowAlg() {
         $jws = new JOSE_JWS($this->plain_jwt);
-        $this->setExpectedException('JOSE_Exception_UnexpectedAlgorithm');
+        $this->expectException('JOSE_Exception_UnexpectedAlgorithm');
         $jws = $jws->sign('secret', 'AES256');
     }
 
@@ -150,7 +150,7 @@ class JOSE_JWS_Test extends JOSE_TestCase {
         $input = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmb28iOiJiYXIifQ.jBKXM6zRu0nP2tYgNTgFxRDwKoiEbNl1P6GyXEHIwEw';
         $jwt = JOSE_JWT::decode($input);
         $jws = new JOSE_JWS($jwt);
-        $this->setExpectedException('JOSE_Exception_UnexpectedAlgorithm');
+        $this->expectException('JOSE_Exception_UnexpectedAlgorithm');
         $jws->verify('shared-secret');
     }
 
@@ -214,7 +214,7 @@ class JOSE_JWS_Test extends JOSE_TestCase {
         $input = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJFUzI1NiJ9.eyJpc3MiOiJqb2UiLCJleHAiOjEzMDA4MTkzODAsImh0dHA6Ly9leGFtcGxlLmNvbS9pc19yb290Ijp0cnVlfQ.MEQCIDh9M3Id8pPd9fp6kgtirYpAirRCU-H0IbaeruLOYWc_AiBhbsswHCIlY5yqWDsOU_sy3lMnyXlrYoQLcejPxL-nDg';
         $jwt = JOSE_JWT::decode($input);
         $jws = new JOSE_JWS($jwt);
-        $this->setExpectedException('JOSE_Exception_UnexpectedAlgorithm');
+        $this->expectException('JOSE_Exception_UnexpectedAlgorithm');
         $jws = $jws->verify('es key should be here');
     }
 
@@ -222,7 +222,7 @@ class JOSE_JWS_Test extends JOSE_TestCase {
         $input = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJ1bmtub3duIn0.eyJmb28iOiJiYXIifQ.';
         $jwt = JOSE_JWT::decode($input);
         $jws = new JOSE_JWS($jwt);
-        $this->setExpectedException('JOSE_Exception_UnexpectedAlgorithm');
+        $this->expectException('JOSE_Exception_UnexpectedAlgorithm');
         $jws = $jws->verify('no key works');
     }
 
@@ -258,7 +258,7 @@ class JOSE_JWS_Test extends JOSE_TestCase {
 
     function testVerifyMalformedJWS_HS256_to_none() {
         $malformed_jwt = JOSE_JWT::decode($this->plain_jwt->toString());
-        $this->setExpectedException('JOSE_Exception_UnexpectedAlgorithm');
+        $this->expectException('JOSE_Exception_UnexpectedAlgorithm');
         $malformed_jwt->verify('secret');
     }
 
@@ -266,7 +266,7 @@ class JOSE_JWS_Test extends JOSE_TestCase {
         $malformed_jwt = JOSE_JWT::decode(
             $this->plain_jwt->sign($this->rsa_keys['public'], 'HS256')->toString()
         );
-        $this->setExpectedException('JOSE_Exception_UnexpectedAlgorithm');
+        $this->expectException('JOSE_Exception_UnexpectedAlgorithm');
         $malformed_jwt->verify($this->rsa_keys['public']);
     }
 
@@ -274,7 +274,10 @@ class JOSE_JWS_Test extends JOSE_TestCase {
         $malformed_jwt = JOSE_JWT::decode(
             $this->plain_jwt->sign($this->rsa_keys['public'], 'HS256')->toString()
         );
-        $this->setExpectedException('PHPUnit_Framework_Error_Notice', 'Invalid signature');
+
+        $this->expectException(\PHPUnit\Framework\Error\Notice::class);
+        $this->expectExceptionMessage('Invalid signature');
+
         $malformed_jwt->verify($this->rsa_keys['public'], 'RS256');
     }
 }

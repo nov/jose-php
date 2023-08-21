@@ -1,12 +1,11 @@
 {
-  "name": "gree/jose",
-  "version": "2.2.1",
+  "name": "maksimovic/jose-php",
   "description": "JWT, JWS and JWS implementation in PHP",
   "keywords": [
     "JSON Web Token", "JSON Web Signature", "JSON Web Encryption",
     "JWT", "JWS", "JWE", "JOSE", "OpenID Connect", "ID Token"
   ],
-  "homepage": "https://github.com/nov/jose",
+  "homepage": "https://github.com/maksimovic/jose-php",
   "license": "MIT",
   "type": "library",
   "authors": [
@@ -14,14 +13,19 @@
       "name": "Nov Matake",
       "email": "nov@matake.jp",
       "homepage": "http://matake.jp"
+    },
+    {
+      "name": "Oliver Maksimovic",
+      "email": "maksimovic@outlook.com",
+      "homepage": "https://github.com/maksimovic"
     }
   ],
   "require": {
-    "php": ">=5.6",
-    "phpseclib/phpseclib": ">=2.0.0"
+    "php": "^7.2 | ^8.0",
+    "phpseclib/phpseclib": "^2.0"
   },
   "require-dev": {
-    "phpunit/phpunit": "4.8.*"
+    "phpunit/phpunit": "^8.5 | ^9.5"
   },
   "include-path": ["src/"],
   "autoload": {
