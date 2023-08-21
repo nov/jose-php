@@ -11,7 +11,7 @@ jobs:
     name: PHP ${{ matrix.php-versions }} Test
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Install PHP
         uses: shivammathur/setup-php@v2
