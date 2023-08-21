@@ -1,12 +1,13 @@
-<phpunit bootstrap="test/bootstrap.php">
+<?xml version="1.0"?>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" bootstrap="vendor/autoload.php" colors="true" convertErrorsToExceptions="true" convertNoticesToExceptions="true" processIsolation="false" stopOnFailure="false" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd">
+  <coverage>
+    <include>
+      <directory suffix=".php">src/</directory>
+    </include>
+  </coverage>
   <testsuites>
-    <testsuite>
-      <directory suffix="Test.php">.</directory>
+    <testsuite name="Test">
+      <directory>test</directory>
     </testsuite>
   </testsuites>
-  <filter>
-    <whitelist addUncoveredFilesFromWhitelist="true">
-      <directory>../src</directory>
-    </whitelist>
-  </filter>
 </phpunit>

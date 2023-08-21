@@ -1,7 +1,13 @@
 <?php
 
-class JOSE_JWT_Test extends JOSE_TestCase {
-    function testToStringWithBlankClaims() {
+namespace test;
+
+use JOSE_JWT;
+
+class JWTTest extends JOSETestCase
+{
+    function testToStringWithBlankClaims()
+    {
         # NOTE:
         #  PHP isn't good at handling blank JSON object.
         #  json_encode(array()) => '[]'
@@ -10,7 +16,8 @@ class JOSE_JWT_Test extends JOSE_TestCase {
         $this->assertEquals($expected, $jwt->toString());
     }
 
-    function testToStringWithConnectClaims() {
+    function testToStringWithConnectClaims()
+    {
         # NOTE:
         #  PHP converts '/' to '\/' in JSON, it can be different in other languages.
         $expected = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJub25lIn0.eyJzdWIiOiJncmVlLXVpZC0xMjM0NSIsImlzcyI6Imh0dHBzOi8vZ3JlZS5uZXQiLCJhdWQiOiJncmVlLWFwcGlkLTEyMzQ1In0.';
@@ -22,7 +29,8 @@ class JOSE_JWT_Test extends JOSE_TestCase {
         $this->assertEquals($expected, $jwt->toString());
     }
 
-    function test__toString() {
+    function test__toString()
+    {
         $expected = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJub25lIn0.eyJzdWIiOiJncmVlLXVpZC0xMjM0NSIsImlzcyI6Imh0dHBzOi8vZ3JlZS5uZXQiLCJhdWQiOiJncmVlLWFwcGlkLTEyMzQ1In0.';
         $jwt = new JOSE_JWT(array(
             'sub' => 'gree-uid-12345',
@@ -32,7 +40,8 @@ class JOSE_JWT_Test extends JOSE_TestCase {
         $this->assertEquals($expected, sprintf('%s', $jwt));
     }
 
-    function testEncode() {
+    function testEncode()
+    {
         $expected = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJub25lIn0.eyJzdWIiOiJncmVlLXVpZC0xMjM0NSIsImlzcyI6Imh0dHBzOi8vZ3JlZS5uZXQiLCJhdWQiOiJncmVlLWFwcGlkLTEyMzQ1In0.';
         $jwt = JOSE_JWT::encode(array(
             'sub' => 'gree-uid-12345',
@@ -42,7 +51,8 @@ class JOSE_JWT_Test extends JOSE_TestCase {
         $this->assertEquals($expected, $jwt->toString());
     }
 
-    function testDecode() {
+    function testDecode()
+    {
         $input = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJub25lIiwiZm9vIjoiZm9vIn0.eyJzdWIiOiJncmVlLXVpZC0xMjM0NSIsImlzcyI6Imh0dHBzOlwvXC9ncmVlLm5ldCIsImF1ZCI6ImdyZWUtYXBwaWQtMTIzNDUifQ.';
         $expected = array(
             'header' => array(
@@ -57,29 +67,33 @@ class JOSE_JWT_Test extends JOSE_TestCase {
             )
         );
         $jwt = JOSE_JWT::decode($input);
-        $this->assertEquals($expected['header'], (array) $jwt->header);
-        $this->assertEquals($expected['claims'], (array) $jwt->claims);
+        $this->assertEquals($expected['header'], (array)$jwt->header);
+        $this->assertEquals($expected['claims'], (array)$jwt->claims);
     }
 
-    function testDecodeWithTooManyDots() {
+    function testDecodeWithTooManyDots()
+    {
         $input = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJub25lIiwiZm9vIjoiZm9vIn0.eyJzdWIiOiJncmVlLXVpZC0xMjM0NSIsImlzcyI6Imh0dHBzOlwvXC9ncmVlLm5ldCIsImF1ZCI6ImdyZWUtYXBwaWQtMTIzNDUifQ..';
         $this->expectException('JOSE_Exception_InvalidFormat');
         JOSE_JWT::decode($input);
     }
 
-    function testDecodeWithTooFewDots() {
+    function testDecodeWithTooFewDots()
+    {
         $input = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJub25lIiwiZm9vIjoiZm9vIn0.eyJzdWIiOiJncmVlLXVpZC0xMjM0NSIsImlzcyI6Imh0dHBzOlwvXC9ncmVlLm5ldCIsImF1ZCI6ImdyZWUtYXBwaWQtMTIzNDUifQ';
         $this->expectException('JOSE_Exception_InvalidFormat');
         JOSE_JWT::decode($input);
     }
 
-    function testDecodeWithInvalidSerialization() {
+    function testDecodeWithInvalidSerialization()
+    {
         $input = 'header.payload.signature';
         $this->expectException('JOSE_Exception_InvalidFormat');
         JOSE_JWT::decode($input);
     }
 
-    function testSign() {
+    function testSign()
+    {
         $expected = array(
             'jwt' => 'eyJ0eXAiOiJKV1QiLCJhbGciOiJub25lIn0.eyJmb28iOiJiYXIifQ.',
             'jws' => 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmb28iOiJiYXIifQ.bVhBeMrW5g33Vi4FLSLn7aqcmAiupmmw-AY17YxCYLI'
@@ -93,20 +107,23 @@ class JOSE_JWT_Test extends JOSE_TestCase {
         $this->assertEquals($expected['jws'], $jws->toString());
     }
 
-    function testVerify() {
+    function testVerify()
+    {
         $input = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmb28iOiJiYXIifQ.bVhBeMrW5g33Vi4FLSLn7aqcmAiupmmw-AY17YxCYLI';
         $jwt = JOSE_JWT::decode($input);
         $this->assertInstanceOf('JOSE_JWS', $jwt->verify('secret', 'HS256'));
     }
 
-    function testVerifyInvalid() {
+    function testVerifyInvalid()
+    {
         $input = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmb28iOiJiYXIifQ.bVhBeMrW5g33Vi4FLSLn7aqcmAiupmmw-AY17YxCYLI-invalid';
         $jwt = JOSE_JWT::decode($input);
         $this->expectException('JOSE_Exception_VerificationFailed');
         $res = $jwt->verify('secret', 'HS256');
     }
 
-    function testEncrypt() {
+    function testEncrypt()
+    {
         $jwt = new JOSE_JWT(array(
             'foo' => 'bar'
         ));

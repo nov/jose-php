@@ -1,7 +1,14 @@
 <?php
 
-class JOSE_JWKSet_Test extends JOSE_TestCase {
-    function testJWKInput() {
+namespace test;
+
+use JOSE_JWK;
+use JOSE_JWKSet;
+
+class JWKSetTest extends JOSETestCase
+{
+    function testJWKInput()
+    {
         $key = new JOSE_JWK(array(
             'kty' => 'RSA',
             'e' => 'AQAB',
@@ -11,7 +18,8 @@ class JOSE_JWKSet_Test extends JOSE_TestCase {
         $this->assertEquals('{"keys":[{"kty":"RSA","e":"AQAB","n":"x9vNhcvSrxjsegZAAo4OEuoZOV_oxINEeWneJYcz...","kid":"Nxz0OiuV92r008w3aI60jWb9tCuT0SixwtyllpaIzW0"}]}', $jwks->toString());
     }
 
-    function testArrayInput() {
+    function testArrayInput()
+    {
         $key = array(
             'kty' => 'RSA',
             'e' => 'AQAB',
@@ -21,7 +29,8 @@ class JOSE_JWKSet_Test extends JOSE_TestCase {
         $this->assertEquals('{"keys":[{"kty":"RSA","e":"AQAB","n":"x9vNhcvSrxjsegZAAo4OEuoZOV_oxINEeWneJYcz..."}]}', $jwks->toString());
     }
 
-    function test__toString() {
+    function test__toString()
+    {
         $key = array(
             'kty' => 'RSA',
             'e' => 'AQAB',

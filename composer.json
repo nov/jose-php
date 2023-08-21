@@ -32,5 +32,10 @@
     "psr-0": {
       "JOSE": "src/"
     }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "test\\" : "test/"
+    }
   }
 }
