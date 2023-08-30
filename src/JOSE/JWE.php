@@ -1,8 +1,8 @@
 <?php
 
-use phpseclib\Crypt\RSA;
-use phpseclib\Crypt\AES;
-use phpseclib\Crypt\Random;
+use phpseclib3\Crypt\RSA;
+use phpseclib3\Crypt\AES;
+use phpseclib3\Crypt\Random;
 
 class JOSE_JWE extends JOSE_JWT {
     var $plain_text;
@@ -48,7 +48,10 @@ class JOSE_JWE extends JOSE_JWT {
         $this->decryptContentEncryptionKey($private_key_or_secret);
         $this->deriveEncryptionAndMacKeys();
         $this->decryptCipherText();
-        $this->checkAuthenticationTag();
+        if (!in_array($this->header['enc'], ['A128GCM', 'A256GCM'])) {
+            /* Authentication tag has already been verified in AESGCM.php for AES GCM encryption */
+            $this->checkAuthenticationTag();
+        }
         return $this;
     }
 
@@ -68,11 +71,9 @@ class JOSE_JWE extends JOSE_JWT {
         } else if ($public_or_private_key instanceof RSA) {
             $rsa = $public_or_private_key;
         } else {
-            $rsa = new RSA();
-            $rsa->loadKey($public_or_private_key);
+            $rsa = RSA::load($public_or_private_key);
         }
-        $rsa->setEncryptionMode($padding_mode);
-        return $rsa;
+        return $rsa->withPadding($padding_mode);
     }
 
     private function cipher() {
@@ -147,6 +148,7 @@ class JOSE_JWE extends JOSE_JWT {
                 $this->jwe_encrypted_key = $rsa->encrypt($this->content_encryption_key);
                 break;
             case 'RSA-OAEP':
+            case 'RSA-OAEP-256':
                 $rsa = $this->rsa($public_key_or_secret, RSA::ENCRYPTION_OAEP);
                 $this->jwe_encrypted_key = $rsa->encrypt($this->content_encryption_key);
                 break;
@@ -176,6 +178,7 @@ class JOSE_JWE extends JOSE_JWT {
                 $this->content_encryption_key = $rsa->decrypt($this->jwe_encrypted_key);
                 break;
             case 'RSA-OAEP':
+            case 'RSA-OAEP-256':
                 $rsa = $this->rsa($private_key_or_secret, RSA::ENCRYPTION_OAEP);
                 $this->content_encryption_key = $rsa->decrypt($this->jwe_encrypted_key);
                 break;
@@ -227,27 +230,53 @@ class JOSE_JWE extends JOSE_JWT {
     }
 
     private function encryptCipherText() {
-        $cipher = $this->cipher();
-        $cipher->setKey($this->encryption_key);
-        $cipher->setIV($this->iv);
-        $this->cipher_text = $cipher->encrypt($this->plain_text);
+        if (in_array($this->header['enc'], ['A128GCM', 'A256GCM'])) {
+            try {
+                list($C, $T) = AESGCM::encrypt($this->encryption_key, $this->iv, $this->plain_text, $this->compact((object) $this->header));
+                $this->cipher_text = $C;
+            } catch (Exception $e) {
+                throw new JOSE_Exception_EncryptionFailed('Payload encryption failed');
+            }
+        } else {
+            $cipher = $this->cipher();
+            $cipher->setKey($this->encryption_key);
+            $cipher->setIV($this->iv);
+            $this->cipher_text = $cipher->encrypt($this->plain_text);
+        }
         if (!$this->cipher_text) {
-            throw new JOSE_Exception_DecryptionFailed('Payload encryption failed');
+            throw new JOSE_Exception_EncryptionFailed('Payload encryption failed');
         }
     }
 
     private function decryptCipherText() {
-        $cipher = $this->cipher();
-        $cipher->setKey($this->encryption_key);
-        $cipher->setIV($this->iv);
-        $this->plain_text = $cipher->decrypt($this->cipher_text);
+        if (in_array($this->header['enc'], ['A128GCM', 'A256GCM'])) {
+            try {
+                $this->plain_text = AESGCM::decrypt($this->encryption_key, $this->iv, $this->cipher_text, $this->auth_data ?: null, $this->authentication_tag);
+            } catch (Exception $e) {
+                throw new JOSE_Exception_DecryptionFailed('Payload decryption failed');
+            }
+        } else {
+            $cipher = $this->cipher();
+            $cipher->setKey($this->encryption_key);
+            $cipher->setIV($this->iv);
+            $this->plain_text = $cipher->decrypt($this->cipher_text);
+        }
         if (!$this->plain_text) {
             throw new JOSE_Exception_DecryptionFailed('Payload decryption failed');
         }
     }
 
     private function generateAuthenticationTag() {
-        $this->authentication_tag = $this->calculateAuthenticationTag();
+        if (in_array($this->header['enc'], ['A128GCM', 'A256GCM'])) {
+            try {
+                list($C, $T) = AESGCM::encrypt($this->encryption_key, $this->iv, $this->plain_text, $this->compact((object) $this->header));
+                $this->authentication_tag = $T;
+            } catch (Exception $e) {
+                throw new JOSE_Exception_EncryptionFailed('Payload encryption failed');
+            }
+        } else {
+            $this->authentication_tag = $this->calculateAuthenticationTag();
+        }
     }
 
     private function calculateAuthenticationTag($use_raw = false) {

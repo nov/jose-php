@@ -1,6 +1,7 @@
 <?php
 
-use phpseclib\Crypt\RSA;
+use phpseclib3\Crypt\RSA;
+use phpseclib3\Exception\NoKeyLoadedException;
 
 class JOSE_JWS extends JOSE_JWT {
     function __construct($jwt) {
@@ -59,13 +60,11 @@ class JOSE_JWS extends JOSE_JWT {
         } else if ($public_or_private_key instanceof RSA) {
             $rsa = $public_or_private_key;
         } else {
-            $rsa = new RSA();
-            $rsa->loadKey($public_or_private_key);
+            $rsa = RSA::load($public_or_private_key);
         }
-        $rsa->setHash($this->digest());
-        $rsa->setMGFHash($this->digest());
-        $rsa->setSignatureMode($padding_mode);
-        return $rsa;
+        return $rsa->withHash($this->digest())
+            ->withMGFHash($this->digest())
+            ->withPadding($padding_mode);
     }
 
     private function digest() {
@@ -103,7 +102,11 @@ class JOSE_JWS extends JOSE_JWT {
             case 'RS256':
             case 'RS384':
             case 'RS512':
-                return $this->rsa($private_key_or_secret, RSA::SIGNATURE_PKCS1)->sign($signature_base_string);
+                try {
+                    return $this->rsa($private_key_or_secret, RSA::SIGNATURE_PKCS1)->sign($signature_base_string);
+                } catch (NoKeyLoadedException $ex) {
+                    return false;
+                }
             case 'ES256':
             case 'ES384':
             case 'ES512':

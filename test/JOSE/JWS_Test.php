@@ -1,7 +1,7 @@
 <?php
 
-use phpseclib\Crypt\RSA;
-use phpseclib\File\X509;
+use phpseclib3\Crypt\RSA;
+use phpseclib3\File\X509;
 
 class JOSE_JWS_Test extends JOSE_TestCase {
     var $plain_jwt;
@@ -117,16 +117,14 @@ class JOSE_JWS_Test extends JOSE_TestCase {
 
     function testSignWithCryptRSA() {
         $expected = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJmb28iOiJiYXIifQ.GzzxRgDHjgBjDkbMsKaFhWnQ43xKlh8T7Ce34b9ye4afuIfE2EglIlK1itGRx1PtH7UOcwtXVWElJ0lHuuTl6hCUL5SDOMJxiPfr5SkTZFWy2SlSYNtdRfra6NPeEa3-a_15dUYv41QY14TCl5HaP7jeMLeqcTlMcjra9fDPMWUciSyWay6025wUiSQBmWW-19GNZQnRHxXNX3lCVMEQMASYT-6QqBvoiJ6vezIt08RghgGdMH1iGY_Gnb7ISuA-lvKk6fcQvQ3MN5Cx0CeqXlXP8NQQF0OwkUgTjNGsKmCG6jKlLZLeXJb72KVK1yR-6jp7OQqqzrovIP7lp-FwIw';
-        $key = new RSA();
-        $key->loadKey($this->rsa_keys['private']);
+        $key = RSA::load($this->rsa_keys['private']);
         $jws = new JOSE_JWS($this->plain_jwt);
         $jws = $jws->sign($key, 'RS256');
         $this->assertEquals($expected, $jws->toString());
     }
 
     function testSignWithJWK() {
-        $key = new RSA();
-        $key->loadKey($this->rsa_keys['private']);
+        $key = RSA::load($this->rsa_keys['private']);
         $jwk = JOSE_JWK::encode($key);
         $jws = new JOSE_JWS($this->plain_jwt);
         $this->setExpectedException('JOSE_Exception_UnexpectedAlgorithm');
@@ -227,8 +225,7 @@ class JOSE_JWS_Test extends JOSE_TestCase {
     }
 
     function testVerifyWithCryptRSA() {
-        $key = new RSA();
-        $key->loadKey($this->rsa_keys['public']);
+        $key = RSA::load($this->rsa_keys['public']);
         $input = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJmb28iOiJiYXIifQ.GzzxRgDHjgBjDkbMsKaFhWnQ43xKlh8T7Ce34b9ye4afuIfE2EglIlK1itGRx1PtH7UOcwtXVWElJ0lHuuTl6hCUL5SDOMJxiPfr5SkTZFWy2SlSYNtdRfra6NPeEa3-a_15dUYv41QY14TCl5HaP7jeMLeqcTlMcjra9fDPMWUciSyWay6025wUiSQBmWW-19GNZQnRHxXNX3lCVMEQMASYT-6QqBvoiJ6vezIt08RghgGdMH1iGY_Gnb7ISuA-lvKk6fcQvQ3MN5Cx0CeqXlXP8NQQF0OwkUgTjNGsKmCG6jKlLZLeXJb72KVK1yR-6jp7OQqqzrovIP7lp-FwIw';
         $jwt = JOSE_JWT::decode($input);
         $jws = new JOSE_JWS($jwt);
@@ -236,8 +233,7 @@ class JOSE_JWS_Test extends JOSE_TestCase {
     }
 
     function testVerifyWithJWK() {
-        $key = new RSA();
-        $key->loadKey($this->rsa_keys['public']);
+        $key = RSA::load($this->rsa_keys['public']);
         $jwk = JOSE_JWK::encode($key);
         $input = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJmb28iOiJiYXIifQ.GzzxRgDHjgBjDkbMsKaFhWnQ43xKlh8T7Ce34b9ye4afuIfE2EglIlK1itGRx1PtH7UOcwtXVWElJ0lHuuTl6hCUL5SDOMJxiPfr5SkTZFWy2SlSYNtdRfra6NPeEa3-a_15dUYv41QY14TCl5HaP7jeMLeqcTlMcjra9fDPMWUciSyWay6025wUiSQBmWW-19GNZQnRHxXNX3lCVMEQMASYT-6QqBvoiJ6vezIt08RghgGdMH1iGY_Gnb7ISuA-lvKk6fcQvQ3MN5Cx0CeqXlXP8NQQF0OwkUgTjNGsKmCG6jKlLZLeXJb72KVK1yR-6jp7OQqqzrovIP7lp-FwIw';
         $jwt = JOSE_JWT::decode($input);
@@ -250,7 +246,7 @@ class JOSE_JWS_Test extends JOSE_TestCase {
         $cert_string = file_get_contents($this->fixture_dir . 'google.crt');
         $x509 = new X509();
         $x509->loadX509($cert_string);
-        $public_key = $x509->getPublicKey()->getPublicKey();
+        $public_key = $x509->getPublicKey()->toString('PKCS8');
         $jwt = JOSE_JWT::decode($id_token_string);
         $jws = new JOSE_JWS($jwt);
         $this->assertInstanceOf('JOSE_JWS', $jws->verify($public_key));
@@ -274,7 +270,7 @@ class JOSE_JWS_Test extends JOSE_TestCase {
         $malformed_jwt = JOSE_JWT::decode(
             $this->plain_jwt->sign($this->rsa_keys['public'], 'HS256')->toString()
         );
-        $this->setExpectedException('PHPUnit_Framework_Error_Notice', 'Invalid signature');
+        $this->setExpectedException('JOSE_Exception_VerificationFailed', 'Signature verification failed');
         $malformed_jwt->verify($this->rsa_keys['public'], 'RS256');
     }
 }
