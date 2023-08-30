@@ -48,6 +48,7 @@ class JOSE_JWE extends JOSE_JWT {
         $this->decryptContentEncryptionKey($private_key_or_secret);
         $this->deriveEncryptionAndMacKeys();
         $this->decryptCipherText();
+        $this->checkAuthenticationTag();
         return $this;
     }
 
