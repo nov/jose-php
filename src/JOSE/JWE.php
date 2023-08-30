@@ -48,10 +48,6 @@ class JOSE_JWE extends JOSE_JWT {
         $this->decryptContentEncryptionKey($private_key_or_secret);
         $this->deriveEncryptionAndMacKeys();
         $this->decryptCipherText();
-        if (!in_array($this->header['enc'], ['A128GCM', 'A256GCM'])) {
-            /* Authentication tag has already been verified in AESGCM.php for AES GCM encryption */
-            $this->checkAuthenticationTag();
-        }
         return $this;
     }
 
