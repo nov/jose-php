@@ -82,7 +82,7 @@ class JOSE_JWE extends JOSE_JWT {
                 throw new JOSE_Exception_UnexpectedAlgorithm('Algorithm not supported');
             case 'A128CBC-HS256':
             case 'A256CBC-HS512':
-                $cipher = new AES(AES::MODE_CBC);
+                $cipher = new AES(self::MODE_CBC);
                 break;
             default:
                 throw new JOSE_Exception_UnexpectedAlgorithm('Unknown algorithm');
@@ -90,7 +90,7 @@ class JOSE_JWE extends JOSE_JWT {
         switch ($this->header['enc']) {
             case 'A128GCM':
             case 'A128CBC-HS256':
-                $cipher->setBlockLength(128);
+                //$cipher->setBlockLength(128);
                 break;
             case 'A256GCM':
             case 'A256CBC-HS512':

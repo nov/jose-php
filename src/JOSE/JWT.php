@@ -1,6 +1,15 @@
 <?php
 
 class JOSE_JWT {
+    const MODE_CTR = 'ctr';
+    const MODE_ECB = 'ecb';
+    const MODE_CBC = 'cbc';
+    const MODE_CFB = 'cfb';
+    const MODE_CFB8 = 'cfb8';
+    const MODE_OFB = 'ofb';
+    const MODE_OFB8 = 'ofb8';
+    const MODE_GCM = 'gcm';
+    const MODE_STREAM = 'stream';
     var $header = array(
         'typ' => 'JWT',
         'alg' => 'none'
